@@ -7,6 +7,15 @@
   src: url('fonts/Coolvetica.otf') format('truetype');
 }
 
+@font-face {
+  font-family: 'funkybird2';
+  src: url('fonts/funkybird2.otf') format('truetype');
+}
+@font-face {
+  font-family: 'serif';
+  src: url('fonts/serif.woff2') format('woff2');
+}
+
 body {
   margin-top: 50px;
 }
@@ -16,44 +25,54 @@ body {
   margin: 0%;
   transition: all 0.2s ease;
 }
+
 .container {
   background-color: floralwhite;
   margin: 0%;
   transition: all 0.2s ease;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* supaya semua isi di tengah */
+  gap: 12px; /* atur jarak antar elemen */
+  padding: 20px 0; /* beri ruang atas dan bawah */
 }
 
 h1{
-  font-family: 'coolvetica', sans-serif;
+  font-size: 50px;
+  font-family: 'funkybird';
   color: #333;
   text-align: center;
-  margin-top: 20px;
+  margin-top: 100px;
+  margin: 100px 0 0 0;
 }
 
 strong {
-  font-family: 'coolvetica', sans-serif;
+  font-family: 'funkybird', sans-serif;
   color:seagreen;
-  font-style: oblique;
 }
 
 p {
-  font-family: 'coolvetica', sans-serif;
+  font-size: 18px;
+  font-family: 'serif', sans-serif;
   color: #333;
   text-align: center;
   margin: 0;
   padding: 20px;
+  margin: 5px 0 10px 10px;
 }
 
 .input {
-  font-family: 'coolvetica', sans-serif;
+  font-family: 'serif', sans-serif;
   display: flex;
   flex-direction: column;
   align-items: center;     /* Pusat horizontal */
-  justify-content: center; /* Pusat vertikal kalau div ini punya tinggi */
-  height: 100vh;           /* Biar seluruh layar */
+  justify-content: center; /* Pusat vertikal kalau div ini punya tinggi */          /* Biar seluruh layar */
   gap: 10px;               /* Jarak antar elemen */
 }
 
 .a:hover {
+  font-family: "funkybird2", sans-serif;
   box-shadow:  2px 2px 0px #333;
   transform: translateY(-2px);
   background-color: floralwhite;
@@ -62,7 +81,7 @@ p {
 
 .a {
   color: floralwhite;
-  font-family: 'coolvetica', sans-serif;
+  font-family: 'serif', sans-serif;
   background-color: seagreen;
   padding: 10px 20px;
   font-size: 16px;
@@ -78,6 +97,7 @@ p {
 }
 
 .input span a:hover {
+  font-family: "funkybird2", sans-serif;
   text-decoration: underline;
   color: seagreen;
   
@@ -94,14 +114,13 @@ p {
     grid-column: span 6 / span 6;
 }
 
-/* Biar navbar selalu di atas layar */
 .parent {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   background-color: floralwhite;
-  height: 40px;
+  height: 45px;
   display: flex;
   align-items: center;
   z-index: 1000;
