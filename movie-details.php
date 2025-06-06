@@ -195,10 +195,6 @@ $pageTitle = $movie['title'] . ' ' . $movie['year'];
     </div>
   </header>
 
-
-
-
-
    <main>
     <article>
 
@@ -265,7 +261,7 @@ $pageTitle = $movie['title'] . ' ' . $movie['year'];
 
               <button class="btn btn-primary">
                 <ion-icon name="play"></ion-icon>
-                <span>Watch Now</span>
+                <span>Add To Your List</span>
               </button>
 
             </div>
