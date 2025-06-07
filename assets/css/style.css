@@ -1,16 +1,4 @@
 /*-----------------------------------*\
- * #style.css
-\*-----------------------------------*/
-
-/**
- * copyright 2022 @codewithsadee
- */
-
-
-
-
-
-/*-----------------------------------*\
  * #CUSTOM PROPERTY
 \*-----------------------------------*/
 
@@ -28,7 +16,9 @@
   --gunmetal-1: hsl(229, 15%, 21%);
   --gunmetal-2: hsl(216, 22%, 18%);
   --gainsboro: hsl(0, 7%, 88%);
-  --citrine: hsl(57, 97%, 45%);
+ --citrine: hsl(57, 97%, 45%);
+        --citrine-hover: hsl(57, 97%, 55%);
+        --citrine-ring: hsla(57, 97%, 45%, 0.4);
   --xiketic: hsl(253, 21%, 13%);
   --gray-x: hsl(0, 0%, 74%);
   --white: hsl(0, 100%, 100%);
@@ -70,11 +60,7 @@
 
   --section-padding: 100px;
 
-}
-
-
-
-
+}  
 
 /*-----------------------------------*\
  * #RESET
@@ -1594,3 +1580,22 @@ body.active { overflow: hidden; }
   }
 
 }
+
+.parent {
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+grid-template-rows: repeat(5, 1fr);
+grid-column-gap: 0px;
+grid-row-gap: 0px;
+}
+
+.div1 { grid-area: 1 / 1 / 4 / 4; }
+.div2 { grid-area: 1 / 1 / 2 / 2; }
+.div3 { grid-area: 1 / 2 / 2 / 3; }
+.div4 { grid-area: 1 / 3 / 2 / 4; }
+.div5 { grid-area: 2 / 1 / 3 / 2; }
+.div6 { grid-area: 2 / 2 / 3 / 3; }
+.div7 { grid-area: 2 / 3 / 3 / 4; }
+.div8 { grid-area: 3 / 1 / 4 / 2; }
+.div9 { grid-area: 3 / 2 / 4 / 3; }
+.div10 { grid-area: 3 / 3 / 4 / 4; }

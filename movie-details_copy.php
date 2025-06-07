@@ -1,34 +1,12 @@
 <?php
-require_once __DIR__ . '/config/database.php';
-
-$movie_id = $_GET['id'] ?? null;
-
-if (!$movie_id) {
-    header('Location: index.php');
-    exit;
-}
-
-try {
-    $stmt = $db->prepare("SELECT * FROM movies WHERE id = ?");
-    $stmt->execute([$movie_id]);
-    $movie = $stmt->fetch(PDO::FETCH_ASSOC); // Fetch as associative array
-    
-    if (!$movie) {
-        header('Location: index.php'); // Redirect if movie not found
-        exit;
-    }
-} catch (PDOException $e) {
-    die("Error: " . $e->getMessage());
-}
-
-// Function to convert minutes to "X min" format
-function formatDuration($minutes) {
-    if ($minutes <= 0) return '0 min';
-    return $minutes . ' min';
-}
-
-// Prepare dynamic title for the page
-$pageTitle = $movie['title'] . ' ' . $movie['year'];
+  include "config/info.php";
+  
+  $id_movie = $_GET['id'];
+    include_once "api/api_movie_id.php";
+    include_once "api/api_movie_video_id.php";
+    include_once "api/api_movie_similar.php";
+    $title = "Detail Movie (".$movie_id->original_title.")";
+  
 ?>
 
 <!DOCTYPE html>
@@ -38,11 +16,15 @@ $pageTitle = $movie['title'] . ' ' . $movie['year'];
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><?php echo htmlspecialchars($pageTitle); ?></title>
+  <title>
+    <?php echo htmlspecialchars($movie_id->title); ?>
+    (<?php echo htmlspecialchars(substr($movie_id->release_date, 0, 4 )); ?>) | FrameX
+</title>
 
   <link rel="shortcut icon" href="./icon.png" type="image/svg+xml">
 
   <link rel="stylesheet" href="./assets/css/style.css">
+  <script src="https://cdn.tailwindcss.com"></script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -135,7 +117,7 @@ $pageTitle = $movie['title'] . ' ' . $movie['year'];
         <ul class="navbar-list">
 
           <li>
-            <a href="./index.php" class="navbar-link">Home</a>
+            <a href="./index_copy.php" class="navbar-link">Home</a>
           </li>
 
           <li>
@@ -202,7 +184,7 @@ $pageTitle = $movie['title'] . ' ' . $movie['year'];
         <div class="container">
 
           <figure class="movie-detail-banner">
-            <img src="<?php echo htmlspecialchars($movie['poster_url']); ?>" alt="<?php echo htmlspecialchars($movie['title']); ?> movie poster">
+           <img src="https://image.tmdb.org/t/p/w500<?= $movie_id->poster_path?>" alt="<?= htmlspecialchars($movie_id->title) ?> movie poster">
           
             <button class="play-btn" onclick="window.open('<?php echo htmlspecialchars($movie['trailer_url']); ?>', '_blank')">
             <ion-icon name="play-circle-outline"></ion-icon>
@@ -212,49 +194,41 @@ $pageTitle = $movie['title'] . ' ' . $movie['year'];
 
           <div class="movie-detail-content">    
             <h1 class="h1 detail-title">
-              <?php echo htmlspecialchars($movie['title']); ?>
+              <a href="<?php echo htmlspecialchars($movie_id->homepage)?>" style="color: inherit;">
+              <?php echo htmlspecialchars($movie_id->title); ?>
+              </a>
             </h1>
 
             <div class="meta-wrapper">
 
               <div class="badge-wrapper">
-                <div class="badge badge-outline"><?php echo htmlspecialchars(strtoupper($movie['quality'])); ?></div>
+                <div class="badge badge-outline">
+                  <a href="<?php echo htmlspecialchars($movie_id->homepage)?>" style="text-decoration: none; color: inherit;">
+                      <?php echo htmlspecialchars(strtoupper($movie_id->original_language)); ?> 
+                  </a>
+                </div>
               </div>
 
-              <div class="ganre-wrapper">
-                <a href="#"><?php echo htmlspecialchars(ucwords(str_replace('_', ' ', $movie['category']))); ?></a>
-                <?php if ($movie['category'] === 'movie') { ?>
-                    <?php } ?>
+              <div class="ganre-wrapper" >
+                <?php foreach ($movie_id->genres as $g): ?>
+                <a href="#"><?php echo htmlspecialchars($g->name) ?></a>
+                <?php endforeach; ?>
               </div>
 
               <div class="date-time">
 
                 <div>
                   <ion-icon name="calendar-outline"></ion-icon>
-                  <time datetime="<?php echo htmlspecialchars($movie['year']); ?>"><?php echo htmlspecialchars($movie['year']); ?></time>
+                  <time datetime="<?php echo htmlspecialchars(substr($movie_id->release_date, 0, 4 )); ?>"><?php echo htmlspecialchars(substr($movie_id->release_date, 0, 4 ));?></time>
                 </div>
 
-                <div>
-                  <ion-icon name="time-outline"></ion-icon>
-                  
-                    <?php if ($movie['category'] === 'tv_show' || $movie['category'] === 'anime'): ?>
-                        <?php if (!empty($movie['season'])): ?>
-                            <time datetime="PT<?= htmlspecialchars($movie['duration']) ?>M"><?= htmlspecialchars($movie['season']) ?> Season, <?= htmlspecialchars($movie['duration']) ?> eps</time>
-                        <?php else: ?>
-                            <time datetime="PT<?= htmlspecialchars($movie['duration']) ?>M"><?= htmlspecialchars($movie['duration']) ?> eps</time>
-                        <?php endif; ?>
-                    <?php else: ?>
-                        <time datetime="PT<?= htmlspecialchars($movie['duration']) ?>M"><?php echo formatDuration($movie['duration']); ?> min</time>
-                    <?php endif; ?>
-                
-                </div>
 
               </div>
 
             </div>
 
             <p class="storyline">
-              <?php echo nl2br(htmlspecialchars($movie['description'])); ?>
+              <?php echo htmlspecialchars($movie_id->overview); ?>
             </p>
 
             <div class="details-actions">
@@ -265,7 +239,7 @@ $pageTitle = $movie['title'] . ' ' . $movie['year'];
               </button>
 
               <div class="title-wrapper">
-                <p class="title">IMDb Rating: <?php echo htmlspecialchars($movie['rating']); ?></p>
+                <p class="title">IMDb Rating: <?php echo htmlspecialchars($movie_id->vote_average); ?></p>
                 <p class="text">Rating</p>
               </div>
 
@@ -276,7 +250,7 @@ $pageTitle = $movie['title'] . ' ' . $movie['year'];
 
             </div>
 
-            <a href="<?php echo htmlspecialchars($movie['poster_url']); ?>" download class="download-btn">
+            <a href="https://image.tmdb.org/t/p/w500 <?php echo htmlspecialchars($movie_id->poster_path); ?>" download class="download-btn">
               <span>Download Poster</span>
               <ion-icon name="download-outline"></ion-icon>
             </a>
@@ -288,6 +262,95 @@ $pageTitle = $movie['title'] . ' ' . $movie['year'];
 
 
     </article>
+
+
+<section class="text-gray-600 body-font">
+  <div class="container px-5 py-24 mx-auto">
+    <div class="flex w-full mb-20 flex-wrap">
+      <h1 class=" h1 section-subtitle">Watch the latest trailers for <strong> <?php echo htmlspecialchars($movie_id->title) ?> </strong>. Browse through our collection of official videos, teasers, and behind-the-scenes content.</h1>
+    </div>
+    
+    <div class="flex flex-wrap md:-m-2 -m-1">
+      <?php
+      $counter = 2;
+      $max_items_to_display = 9;
+      $current_item_count = 0;
+      
+      // First row container
+      echo '<div class="flex flex-wrap w-full">';
+      
+      foreach ($movie_video_id->results as $video) {
+          if ($current_item_count >= $max_items_to_display) {
+              break;
+          }
+          
+          // Start new row after 3 items
+          if ($current_item_count > 0 && $current_item_count % 3 == 0) {
+              echo '</div><div class="flex flex-wrap w-full">';
+          }
+          
+          echo '<div class="md:p-2 p-1 w-full md:w-1/3">';
+          echo '<div class="div'. $counter .'">';
+          echo '<iframe class="w-full h-64 object-cover object-center block" src="https://www.youtube.com/embed/' . htmlspecialchars($video->key) . '" frameborder="0" allowfullscreen></iframe>';
+          echo '</div></div>';
+          
+          $current_item_count++;
+          $counter++;
+      }
+      
+      echo '</div>'; // Close last row
+      ?>
+    </div>
+  </div>
+</section>
+
+ <section class="upcoming" style="background-image: url('./assets/images/tv-series-bg.jpg');">
+   <div class="container">
+
+        <div class="flex-wrapper">
+
+            <div class="title-wrapper">
+                <p class="section-subtitle">Browse More Like <strong> <?php echo htmlspecialchars($movie_id->title) ?> </strong> </p>
+                <h2 class="h2 section-title">Simmiliar Movie</h2>
+            </div>
+            </div>
+
+        <ul class="movies-list has-scrollbar" id="anime_collection">
+           <?php foreach ($movie_similar_id->results as $p): ?>
+            <li data-category="<?= htmlspecialchars($p-> genre_ids[0]) ?>">
+                <div class="movie-card">
+                    <a href="movie-details_copy.php?id=<?= $p->id ?>">
+                        <figure class="card-banner">
+                            <img src="https://image.tmdb.org/t/p/w500<?= $p->poster_path?>" alt="<?= htmlspecialchars($p->title) ?> movie poster">
+                        </figure>
+                    </a>
+
+                    <div class="title-wrapper">
+                        <a href="movie-details_copy.php?id=<?= $p->id?>">
+                            <h3 class="card-title"><?= htmlspecialchars($p->title) ?></h3>
+                        </a>
+                      <time datetime="<?= htmlspecialchars(substr($p->release_date, 0, 4)) ?>">
+                          <?= htmlspecialchars(substr($p->release_date, 0, 4)) ?>
+                      </time>
+                    </div>
+
+                    <div class="card-meta">
+                        <div class="badge badge-outline"><?= htmlspecialchars(strtoupper($p->original_language)) ?></div>
+                        <div class="duration">
+                        </div>
+                        <div class="rating">
+                            <ion-icon name="star"></ion-icon>
+                            <data><?= number_format($p->vote_average, 1) ?>/10</data>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <?php endforeach; ?>
+        </ul>
+
+    </div>
+      </section>
+
   </main>
 
 
@@ -298,117 +361,7 @@ $pageTitle = $movie['title'] . ' ' . $movie['year'];
   <!-- 
     - #FOOTER
   -->
-
-  <footer class="footer">
-
-    <div class="footer-top">
-      <div class="container">
-
-        <div class="footer-brand-wrapper">
-
-          <a href="./index.php" class="logo">
-            <img src="./assets/images/iconname.png" alt="Frame X logo" style="width: 150px; height: 64.8px;">
-          </a>
-
-          <ul class="footer-list">
-
-            <li>
-              <a href="./index.html" class="footer-link">Home</a>
-            </li>
-
-            <li>
-              <a href="#" class="footer-link">Movie</a>
-            </li>
-
-            <li>
-              <a href="#" class="footer-link">TV Show</a>
-            </li>
-
-            <li>
-              <a href="#" class="footer-link">Web Series</a>
-            </li>
-
-            <li>
-              <a href="#" class="footer-link">Pricing</a>
-            </li>
-
-          </ul>
-
-        </div>
-
-        <div class="divider"></div>
-
-        <div class="quicklink-wrapper">
-
-          <ul class="quicklink-list">
-
-            <li>
-              <a href="#" class="quicklink-link">Faq</a>
-            </li>
-
-            <li>
-              <a href="#" class="quicklink-link">Help center</a>
-            </li>
-
-            <li>
-              <a href="#" class="quicklink-link">Terms of use</a>
-            </li>
-
-            <li>
-              <a href="#" class="quicklink-link">Privacy</a>
-            </li>
-
-          </ul>
-
-          <ul class="social-list">
-
-            <li>
-              <a href="#" class="social-link">
-                <ion-icon name="logo-facebook"></ion-icon>
-              </a>
-            </li>
-
-            <li>
-              <a href="#" class="social-link">
-                <ion-icon name="logo-twitter"></ion-icon>
-              </a>
-            </li>
-
-            <li>
-              <a href="#" class="social-link">
-                <ion-icon name="logo-pinterest"></ion-icon>
-              </a>
-            </li>
-
-            <li>
-              <a href="#" class="social-link">
-                <ion-icon name="logo-linkedin"></ion-icon>
-              </a>
-            </li>
-
-          </ul>
-
-        </div>
-
-      </div>
-    </div>
-
-    <div class="footer-bottom">
-      <div class="container">
-
-        <p class="copyright">
-          &copy; 2025 <a href="#">Kelompok 2 Project PemWeb</a>. All Rights Reserved
-        </p>
-
-        <img src="./assets/images/footerimg.png" style="height: 3252,1px; width: 300px;" alt="Platform Movie companies logo" class="footer-bottom-img">
-
-      </div>
-    </div>
-
-  </footer>
-
-
-
+<?php include __DIR__ . '/footer.php'; ?>
 
 
   <!-- 

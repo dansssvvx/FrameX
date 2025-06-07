@@ -10,6 +10,12 @@ $anime_collection = $db->query($anime_query)->fetchAll(PDO::FETCH_ASSOC);
 
 $tv_series_query = "SELECT * FROM movies WHERE category = 'tv_show' ORDER BY rating DESC LIMIT 4";
 $tv_series = $db->query($tv_series_query)->fetchAll(PDO::FETCH_ASSOC);
+
+include_once __DIR__ . '/config/info.php';
+include_once __DIR__ . '/API/api_toprated.php';
+include_once __DIR__ . '/API/api_upcoming.php';
+include_once __DIR__ . '/API/api_popular.php';
+include_once __DIR__ . '/API/api_now.php';
 ?>
 
 <!DOCTYPE html>
@@ -71,7 +77,7 @@ $tv_series = $db->query($tv_series_query)->fetchAll(PDO::FETCH_ASSOC);
           </select>
         </div>
 
-        <a href="login.html" class="btn btn-primary">Sign in</a>
+        <a href="login.php" class="btn btn-primary">Sign in</a>
 
       </div>
 
@@ -228,53 +234,43 @@ $tv_series = $db->query($tv_series_query)->fetchAll(PDO::FETCH_ASSOC);
         - #UPCOMING
       -->
 
-<section class="upcoming">
+<section class="upcoming" style="background-image: url('./assets/images/top-rated-bg.jpg');">
     <div class="container">
 
         <div class="flex-wrapper">
 
             <div class="title-wrapper">
-                <p class="section-subtitle">Explore the Greatest Anime</p>
-                <h2 class="h2 section-title">Masterpiece Anime</h2>
+                <p class="section-subtitle">Check the News movie</p>
+                <h2 class="h2 section-title">Upcoming Movies</h2>
             </div>
             </div>
 
         <ul class="movies-list has-scrollbar" id="anime_collection">
-           <?php foreach ($anime_collection as $movie): ?>
-            <li data-category="<?= htmlspecialchars($movie['category']) ?>">
+           <?php foreach ($upcoming->results as $p): ?>
+            <li data-category="<?= htmlspecialchars($p-> genre_ids[0]) ?>">
                 <div class="movie-card">
-                    <a href="./movie-details.php?id=<?= $movie['id'] ?>">
+                    <a href="movie-details_copy.php?id=<?= $p->id ?>">
                         <figure class="card-banner">
-                            <img src="<?= htmlspecialchars($movie['poster_url']) ?>" alt="<?= htmlspecialchars($movie['title']) ?> movie poster">
+                            <img src="https://image.tmdb.org/t/p/w500<?= $p->poster_path?>" alt="<?= htmlspecialchars($p->title) ?> movie poster">
                         </figure>
                     </a>
 
                     <div class="title-wrapper">
-                        <a href="./movie-details.php?id=<?= $movie['id'] ?>">
-                            <h3 class="card-title"><?= htmlspecialchars($movie['title']) ?></h3>
+                        <a href="movie-details_copy.php?id=<?= $p->id?>">
+                            <h3 class="card-title"><?= htmlspecialchars($p->title) ?></h3>
                         </a>
-                        <time datetime="<?= $movie['year'] ?>"><?= $movie['year'] ?></time>
+                      <time datetime="<?= htmlspecialchars(substr($p->release_date, 0, 4)) ?>">
+                          <?= htmlspecialchars(substr($p->release_date, 0, 4)) ?>
+                      </time>
                     </div>
 
                     <div class="card-meta">
-                        <div class="badge badge-outline"><?= htmlspecialchars($movie['quality']) ?></div>
+                       <div class="badge badge-outline"><?= htmlspecialchars(strtoupper($p->original_language)) ?></div>
                         <div class="duration">
-                            <ion-icon name="time-outline"></ion-icon>
-                            
-                    <?php if ($movie['type'] === 'series'): ?>
-                        <?php if (!empty($movie['season'])): ?>
-                            <time datetime="PT<?= htmlspecialchars($movie['duration']) ?>M"><?= htmlspecialchars($movie['season']) ?> Season, <?= htmlspecialchars($movie['duration']) ?> eps</time>
-                        <?php else: ?>
-                            <time datetime="PT<?= htmlspecialchars($movie['duration']) ?>M"><?= htmlspecialchars($movie['duration']) ?> eps</time>
-                        <?php endif; ?>
-                    <?php else: ?>
-                        <time datetime="PT<?= htmlspecialchars($movie['duration']) ?>M"><?= htmlspecialchars($movie['duration']); ?> min</time>
-                    <?php endif; ?>
-
                         </div>
                         <div class="rating">
                             <ion-icon name="star"></ion-icon>
-                            <data><?= number_format($movie['rating'], 1) ?></data>
+                            <data><?= number_format($p->vote_average, 1) ?>/10</data>
                         </div>
                     </div>
                 </div>
@@ -288,8 +284,55 @@ $tv_series = $db->query($tv_series_query)->fetchAll(PDO::FETCH_ASSOC);
       <!-- 
         - #TOP RATED MOVIES
         -->
+<section class="upcoming">
+     <div class="container">
 
-      <section class="top-rated">
+        <div class="flex-wrapper">
+
+            <div class="title-wrapper">
+                <p class="section-subtitle">Explore the G.O.A.T Movie</p>
+                <h2 class="h2 section-title">Top Rated movies</h2>
+            </div>
+            </div>
+
+        <ul class="movies-list has-scrollbar" id="anime_collection">
+           <?php foreach ($toprated->results as $p): ?>
+            <li data-category="<?= htmlspecialchars($p-> genre_ids[0]) ?>">
+                <div class="movie-card">
+                    <a href="movie-details_copy.php?id=<?= $p->id ?>">
+                        <figure class="card-banner">
+                            <img src="https://image.tmdb.org/t/p/w500<?= $p->poster_path?>" alt="<?= htmlspecialchars($p->title) ?> movie poster">
+                        </figure>
+                    </a>
+
+                    <div class="title-wrapper">
+                        <a href="movie-details_copy.php?id=<?= $p->id?>">
+                            <h3 class="card-title"><?= htmlspecialchars($p->title) ?></h3>
+                        </a>
+                      <time datetime="<?= htmlspecialchars(substr($p->release_date, 0, 4)) ?>">
+                          <?= htmlspecialchars(substr($p->release_date, 0, 4)) ?>
+                      </time>
+                    </div>
+
+                    <div class="card-meta">
+                        <div class="badge badge-outline"><?= htmlspecialchars(strtoupper($p->original_language)) ?></div>
+                        <div class="duration">
+                        </div>
+                        <div class="rating">
+                            <ion-icon name="star"></ion-icon>
+                            <data><?= number_format($p->vote_average, 1) ?>/10</data>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <?php endforeach; ?>
+        </ul>
+
+    </div>
+</section>
+
+
+      <!-- <section class="top-rated">
     <div class="container">
       <p class="section-subtitle">Fan Favorite Movie</p>
         <h2 class="h2 section-title">Top Rated Movies</h2>
@@ -328,60 +371,112 @@ $tv_series = $db->query($tv_series_query)->fetchAll(PDO::FETCH_ASSOC);
             <?php endforeach; ?>
         </ul>
     </div>
-</section>
+</section> -->
 
 
 
 
       <!-- 
-        - #TV SERIES
+        - #Popular
       -->
 
-      <section class="tv-series">
-        <div class="container">
+  <section class="upcoming" style="background-image: url('./assets/images/tv-series-bg.jpg');">
+   <div class="container">
 
-          <p class="section-subtitle">Best TV Series</p>
+        <div class="flex-wrapper">
 
-          <h2 class="h2 section-title">World Best TV Series</h2>
+            <div class="title-wrapper">
+                <p class="section-subtitle">Check the Most Popular Movies</p>
+                <h2 class="h2 section-title">Popular Movies</h2>
+            </div>
+            </div>
 
-          <ul class="movies-list has-scrollbar" id="tv-series">
-            <?php foreach ($tv_series as $movie): ?>
-            <li data-category="<?= htmlspecialchars($movie['category']) ?>">
+        <ul class="movies-list has-scrollbar" id="anime_collection">
+           <?php foreach ($popular->results as $p): ?>
+            <li data-category="<?= htmlspecialchars($p-> genre_ids[0]) ?>">
                 <div class="movie-card">
-                    <a href="./movie-details.php?id=<?= $movie['id'] ?>">
+                    <a href="movie-details_copy.php?id=<?= $p->id ?>">
                         <figure class="card-banner">
-                            <img src="<?= htmlspecialchars($movie['poster_url']) ?>" alt="<?= htmlspecialchars($movie['title']) ?> movie poster">
+                            <img src="https://image.tmdb.org/t/p/w500<?= $p->poster_path?>" alt="<?= htmlspecialchars($p->title) ?> movie poster">
                         </figure>
                     </a>
 
                     <div class="title-wrapper">
-                        <a href="./movie-details.php?id=<?= $movie['id'] ?>">
-                            <h3 class="card-title"><?= htmlspecialchars($movie['title']) ?></h3>
+                        <a href="movie-details_copy.php?id=<?= $p->id?>">
+                            <h3 class="card-title"><?= htmlspecialchars($p->title) ?></h3>
                         </a>
-                        <time datetime="<?= $movie['year'] ?>"><?= $movie['year'] ?></time>
+                      <time datetime="<?= htmlspecialchars(substr($p->release_date, 0, 4)) ?>">
+                          <?= htmlspecialchars(substr($p->release_date, 0, 4)) ?>
+                      </time>
                     </div>
 
                     <div class="card-meta">
-                        <div class="badge badge-outline"><?= htmlspecialchars($movie['quality']) ?></div>
+                        <div class="badge badge-outline"><?= htmlspecialchars(strtoupper($p->original_language)) ?></div>
                         <div class="duration">
-                            <ion-icon name="time-outline"></ion-icon>
-                            <time datetime="PT<?= $movie['duration'] ?>M"><?= $movie['season'] ?> Season <?= $movie['duration'] ?> eps</time>
                         </div>
                         <div class="rating">
                             <ion-icon name="star"></ion-icon>
-                            <data><?= number_format($movie['rating'], 1) ?></data>
+                            <data><?= number_format($p->vote_average, 1) ?>/10</data>
                         </div>
                     </div>
                 </div>
             </li>
             <?php endforeach; ?>
-          </ul>
+        </ul>
 
-        </div>
+    </div>
       </section>
+
+<!-- Now Playing -->
+
+  <section class="upcoming" style="background-image: url('./assets/images/tv-series-bg.jpg');">
+   <div class="container">
+
+        <div class="flex-wrapper">
+
+            <div class="title-wrapper">
+                <p class="section-subtitle">Catch the Hype: See What's Playing Now!</p>
+                <h2 class="h2 section-title">Now Playing</h2>
+            </div>
+            </div>
+
+        <ul class="movies-list has-scrollbar" id="anime_collection">
+           <?php foreach ($nowplaying->results as $p): ?>
+            <li data-category="<?= htmlspecialchars($p-> genre_ids[0]) ?>">
+                <div class="movie-card">
+                    <a href="movie-details_copy.php?id=<?= $p->id ?>">
+                        <figure class="card-banner">
+                            <img src="https://image.tmdb.org/t/p/w500<?= $p->poster_path?>" alt="<?= htmlspecialchars($p->title) ?> movie poster">
+                        </figure>
+                    </a>
+
+                    <div class="title-wrapper">
+                        <a href="movie-details_copy.php?id=<?= $p->id?>">
+                            <h3 class="card-title"><?= htmlspecialchars($p->title) ?></h3>
+                        </a>
+                      <time datetime="<?= htmlspecialchars(substr($p->release_date, 0, 4)) ?>">
+                          <?= htmlspecialchars(substr($p->release_date, 0, 4)) ?>
+                      </time>
+                    </div>
+
+                    <div class="card-meta">
+                        <div class="badge badge-outline"><?= htmlspecialchars(strtoupper($p->original_language)) ?></div>
+                        <div class="duration">
+                        </div>
+                        <div class="rating">
+                            <ion-icon name="star"></ion-icon>
+                            <data><?= number_format($p->vote_average, 1) ?>/10</data>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <?php endforeach; ?>
+        </ul>
+
+    </div>
+      </section>
+
   </main>
-
-
 
 
 
