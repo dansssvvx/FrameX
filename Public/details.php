@@ -7,8 +7,8 @@ if (!isset($_SESSION['user_logged_in'])) {
     exit;
 }
 
-require_once __DIR__ .  "../Config/database.php";
-include_once __DIR__ . "../Config/info.php";
+require_once __DIR__ .  "../Conf/database.php";
+include_once __DIR__ . "../Conf/info.php";
 
 $id_movie = $_GET['id'];
 $id_tv = $_GET['id'];

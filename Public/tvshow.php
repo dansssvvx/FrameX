@@ -5,7 +5,7 @@ if (!isset($_SESSION['user_logged_in'])) {
     header("Location: ./login.php");
     exit;
 }
-include "../Config/info.php";
+include "../Conf/info.php";
 include "../API/api_tv.php";
 ?>
 

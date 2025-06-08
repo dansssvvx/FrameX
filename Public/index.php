@@ -1,9 +1,9 @@
 <?php
 session_start();
 
-require_once '../Config/database.php';
+require_once '../Conf/database.php';
 
-include_once '../Config/info.php';
+include_once '../Conf/info.php';
 include_once '../API/api_toprated.php';
 include_once '../API/api_upcoming.php';
 include_once '../API/api_popular.php';

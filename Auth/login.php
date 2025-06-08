@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../Config/database.php';
+require_once '../Conf/database.php';
 
 $error = '';
 

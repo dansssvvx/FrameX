@@ -5,7 +5,7 @@ if (!isset($_SESSION['user_logged_in'])) {
     header("Location: ../Auth/login.php");
     exit;
 }
-include "../Config/info.php";
+include "../Conf/info.php";
 include "../API/api_trending.php";
 ?>
 
