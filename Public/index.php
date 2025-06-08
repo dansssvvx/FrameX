@@ -1,21 +1,13 @@
 <?php
-// Koneksi database
-require_once __DIR__ . '/config/database.php';
+session_start();
 
-$top_rated_query = "SELECT * FROM movies WHERE category = 'movie' ORDER BY rating DESC LIMIT 4";
-$top_rated_movies = $db->query($top_rated_query)->fetchAll(PDO::FETCH_ASSOC);
+require_once '../Config/database.php';
 
-$anime_query = "SELECT * FROM movies WHERE category = 'anime' ORDER BY rating DESC LIMIT 4";
-$anime_collection = $db->query($anime_query)->fetchAll(PDO::FETCH_ASSOC);
-
-$tv_series_query = "SELECT * FROM movies WHERE category = 'tv_show' ORDER BY rating DESC LIMIT 4";
-$tv_series = $db->query($tv_series_query)->fetchAll(PDO::FETCH_ASSOC);
-
-include_once __DIR__ . '/config/info.php';
-include_once __DIR__ . '/API/api_toprated.php';
-include_once __DIR__ . '/API/api_upcoming.php';
-include_once __DIR__ . '/API/api_popular.php';
-include_once __DIR__ . '/API/api_now.php';
+include_once '../Config/info.php';
+include_once '../API/api_toprated.php';
+include_once '../API/api_upcoming.php';
+include_once '../API/api_popular.php';
+include_once '../API/api_now.php';
 ?>
 
 <!DOCTYPE html>
@@ -30,12 +22,12 @@ include_once __DIR__ . '/API/api_now.php';
   <!-- 
     - favicon
   -->
-  <link rel="shortcut icon" href="icon.png" type="image/png">
+  <link rel="shortcut icon" href="../Assets/images/icon.png" type="image/png">
 
   <!-- 
     - custom css link
   -->
-  <link rel="stylesheet" href="./assets/css/style.css">
+  <link rel="stylesheet" href="../Assets/css/style.css">
 
   <!-- 
     - google font link
@@ -47,7 +39,7 @@ include_once __DIR__ . '/API/api_now.php';
 
 <body id="top">
 
-<?php include __DIR__ . '/header.php'; ?>
+<?php include __DIR__ . './header.php'; ?>
 
   <main>
     <article>
@@ -56,7 +48,7 @@ include_once __DIR__ . '/API/api_now.php';
         - #HERO
       -->
 
-      <section class="hero" style="background-image: url('./assets/images/bghero.jpg');" data-hero>
+      <section class="hero" style="background-image: url('../Assets/images/bghero.jpg');" data-hero>
         <div class="container">
 
           <div class="hero-content">
@@ -117,7 +109,7 @@ include_once __DIR__ . '/API/api_now.php';
         - #UPCOMING
       -->
 
-<section class="upcoming" style="background-image: url('./assets/images/top-rated-bg.jpg');">
+<section class="upcoming" style="background-image: url('../Assets/images/top-rated-bg.jpg');">
     <div class="container">
 
         <div class="flex-wrapper">
@@ -132,14 +124,14 @@ include_once __DIR__ . '/API/api_now.php';
            <?php foreach ($upcoming->results as $p): ?>
             <li data-category="<?= htmlspecialchars($p-> genre_ids[0]) ?>">
                 <div class="movie-card">
-                    <a href="movie-details_copy.php?id=<?= $p->id ?>">
+                    <a href="./details.php?id=<?= $p->id ?>&type=movie">
                         <figure class="card-banner">
                             <img src="https://image.tmdb.org/t/p/w500<?= $p->poster_path?>" alt="<?= htmlspecialchars($p->title) ?> movie poster">
                         </figure>
                     </a>
 
                     <div class="title-wrapper">
-                        <a href="movie-details_copy.php?id=<?= $p->id?>">
+                        <a href="./details.php?id=<?= $p->id?>&type=movie?>">
                             <h3 class="card-title"><?= htmlspecialchars($p->title) ?></h3>
                         </a>
                       <time datetime="<?= htmlspecialchars(substr($p->release_date, 0, 4)) ?>">
@@ -182,14 +174,14 @@ include_once __DIR__ . '/API/api_now.php';
            <?php foreach ($toprated->results as $p): ?>
             <li data-category="<?= htmlspecialchars($p-> genre_ids[0]) ?>">
                 <div class="movie-card">
-                    <a href="movie-details_copy.php?id=<?= $p->id ?>">
+                    <a href="./details.php?id=<?= $p->id ?>&type=movie?>">
                         <figure class="card-banner">
                             <img src="https://image.tmdb.org/t/p/w500<?= $p->poster_path?>" alt="<?= htmlspecialchars($p->title) ?> movie poster">
                         </figure>
                     </a>
 
                     <div class="title-wrapper">
-                        <a href="movie-details_copy.php?id=<?= $p->id?>">
+                        <a href="./details.php?id=<?= $p->id?>&type=movie?>">
                             <h3 class="card-title"><?= htmlspecialchars($p->title) ?></h3>
                         </a>
                       <time datetime="<?= htmlspecialchars(substr($p->release_date, 0, 4)) ?>">
@@ -263,7 +255,7 @@ include_once __DIR__ . '/API/api_now.php';
         - #Popular
       -->
 
-  <section class="upcoming" style="background-image: url('./assets/images/tv-series-bg.jpg');">
+  <section class="upcoming" style="background-image: url('../Assets/images/top-rated-bg.jpg');">
    <div class="container">
 
         <div class="flex-wrapper">
@@ -278,14 +270,14 @@ include_once __DIR__ . '/API/api_now.php';
            <?php foreach ($popular->results as $p): ?>
             <li data-category="<?= htmlspecialchars($p-> genre_ids[0]) ?>">
                 <div class="movie-card">
-                    <a href="movie-details_copy.php?id=<?= $p->id ?>">
+                    <a href="./details.php?id=<?= $p->id ?>&type=movie?>">
                         <figure class="card-banner">
                             <img src="https://image.tmdb.org/t/p/w500<?= $p->poster_path?>" alt="<?= htmlspecialchars($p->title) ?> movie poster">
                         </figure>
                     </a>
 
                     <div class="title-wrapper">
-                        <a href="movie-details_copy.php?id=<?= $p->id?>">
+                        <a href="./details.php?id=<?= $p->id?>&type=movie?>">
                             <h3 class="card-title"><?= htmlspecialchars($p->title) ?></h3>
                         </a>
                       <time datetime="<?= htmlspecialchars(substr($p->release_date, 0, 4)) ?>">
@@ -312,7 +304,7 @@ include_once __DIR__ . '/API/api_now.php';
 
 <!-- Now Playing -->
 
-  <section class="upcoming" style="background-image: url('./assets/images/tv-series-bg.jpg');">
+  <section class="upcoming" style="background-image: url('../Assets/images/tv-series-bg.jpg');">
    <div class="container">
 
         <div class="flex-wrapper">
@@ -327,14 +319,14 @@ include_once __DIR__ . '/API/api_now.php';
            <?php foreach ($nowplaying->results as $p): ?>
             <li data-category="<?= htmlspecialchars($p-> genre_ids[0]) ?>">
                 <div class="movie-card">
-                    <a href="movie-details_copy.php?id=<?= $p->id ?>">
+                    <a href="./details.php?id=<?= $p->id ?>&type=movie?>">
                         <figure class="card-banner">
                             <img src="https://image.tmdb.org/t/p/w500<?= $p->poster_path?>" alt="<?= htmlspecialchars($p->title) ?> movie poster">
                         </figure>
                     </a>
 
                     <div class="title-wrapper">
-                        <a href="movie-details_copy.php?id=<?= $p->id?>">
+                        <a href="./details.php?id=<?= $p->id?>&type=movie?>">
                             <h3 class="card-title"><?= htmlspecialchars($p->title) ?></h3>
                         </a>
                       <time datetime="<?= htmlspecialchars(substr($p->release_date, 0, 4)) ?>">
@@ -367,7 +359,7 @@ include_once __DIR__ . '/API/api_now.php';
     - #FOOTER
   -->
 
-<?php include __DIR__ . '/footer.php'; ?>
+<?php include __DIR__ . './footer.php'; ?>
 
   <!-- 
     - #GO TO TOP
@@ -384,7 +376,7 @@ include_once __DIR__ . '/API/api_now.php';
   <!-- 
     - custom js link
   -->
-  <script src="./assets/js/script.js"></script>
+  <script src="../Assets/js/script.js"></script>
 
   <!-- 
     - ionicon link

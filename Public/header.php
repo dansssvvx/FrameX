@@ -4,7 +4,7 @@
       <div class="overlay" data-overlay></div>
 
       <a href="./index.php" class="logo">
-        <img src="./assets/images/iconname.png" alt="Frame X logo" style="width: 100px; height: 43.2px;">
+        <img src="../Assets/images/iconname.png" alt="Frame X logo" style="width: 100px; height: 43.2px;">
       </a>
 
       <div class="header-actions">
@@ -24,7 +24,11 @@
           </select>
         </div>
 
-        <a href="login.php" class="btn btn-primary">Sign in</a>
+        <?php if (isset($_SESSION['user_logged_in'])): ?>
+        <a href="../Auth/logout.php" class="btn btn-primary">Log out</a>
+       <?php else: ?>
+        <a href="../Auth/login.php" class="btn btn-primary">Login</a>
+       <?php endif; ?>
 
       </div>
 
@@ -36,8 +40,8 @@
 
         <div class="navbar-top">
 
-          <a href="./index_copy.html" class="logo">
-            <img src="./assets/images/iconanme.png" alt="FrameX logo">
+          <a href="./index.html" class="logo">
+            <img src="./Assets/images/iconanme.png" alt="FrameX logo">
           </a>
 
           <button class="menu-close-btn" data-menu-close-btn>
@@ -49,7 +53,7 @@
         <ul class="navbar-list">
 
           <li>
-            <a href="index_copy.php" class="navbar-link">Home</a>
+            <a href="index.php" class="navbar-link">Home</a>
           </li>
 
           <li>
@@ -57,7 +61,7 @@
           </li>
 
           <li>
-            <a href="#" class="navbar-link">Tv Show</a>
+            <a href="tvshow.php" class="navbar-link">Tv Show</a>
           </li>
 
           <li>

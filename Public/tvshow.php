@@ -1,6 +1,12 @@
 <?php
-include "config/info.php";
-include "API/api_trending.php";
+
+session_start();
+if (!isset($_SESSION['user_logged_in'])) {
+    header("Location: ./login.php");
+    exit;
+}
+include "../Config/info.php";
+include "../API/api_tv.php";
 ?>
 
 <!DOCTYPE html>
@@ -16,12 +22,12 @@ include "API/api_trending.php";
   <!-- 
     - favicon
   -->
-  <link rel="shortcut icon" href="icon.png" type="image/png">
+  <link rel="shortcut icon" href="../Assets/images/icon.png" type="image/png">
 
   <!-- 
     - custom css link
   -->
-  <link rel="stylesheet" href="./assets/css/style.css">
+  <link rel="stylesheet" href="../Assets/css/style.css">
 
   <!-- 
     - google font link
@@ -99,19 +105,19 @@ include "API/api_trending.php";
             <ul class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 p-0 m-0 list-none">
                 <?php
 
-                if (isset($trending) && is_object($trending) && isset($trending->results) && is_array($trending->results) && !empty($trending->results)) {
-                    foreach ($trending->results as $t) :
+                if (isset($tv_trending) && is_object($tv_trending) && isset($tv_trending->results) && is_array($tv_trending->results) && !empty($tv_trending->results)) {
+                    foreach ($tv_trending->results as $t) :
 
                         $image_path = $t->poster_path;
                         $image_url = $image_path ? "https://image.tmdb.org/t/p/w500" . htmlspecialchars($image_path) : 'https://dummyimage.com/500x750/cccccc/000000.png&text=No+Image';
                         
                 ?>
                         <li class="transition-all">
-                            <a href="./movie-details_copy.php?id=<?= htmlspecialchars($t->id) ?>" 
+                            <a href="./details.php?id=<?= htmlspecialchars($t->id) ?>&type=<?= htmlspecialchars($t->media_type) ?>" 
                                class="outline-offset-4 block">
                                 <img
                                     src="<?= $image_url ?>"
-                                    alt="<?= htmlspecialchars($t->title) ?>"
+                                    alt="<?= htmlspecialchars($t->name) ?>"
                                     class="w-full max-w-full object-cover transition-all duration-200 ease-in-out"
                                 />
                             </a>
@@ -128,7 +134,7 @@ include "API/api_trending.php";
 
 
 </body>
-    <?php include_once __DIR__ . '/footer.php';?>
+    <?php include_once __DIR__ . './footer.php';?>
 </body>
 
  <!-- 
@@ -146,7 +152,7 @@ include "API/api_trending.php";
   <!-- 
     - custom js link
   -->
-  <script src="./assets/js/script.js"></script>
+  <script src="../Assets/js/script.js"></script>
 
   <!-- 
     - ionicon link

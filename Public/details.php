@@ -1,16 +1,33 @@
 <?php
-  include "config/info.php";
-  
-  $id_movie = $_GET['id'];
-  $id_tv = $_GET['id'];
 
-    include_once "API/api_movie_id.php";
-    include_once "API/api_movie_video_id.php";
-    include_once "API/api_movie_similar.php";
-    include_once "API/api_tv_id.php";
-    include_once "API/api_tv_video_id.php";
-    include_once "API/api_tv.php";
-    include_once "API/api_tv_similar.php";
+session_start();
+// Check if the user is logged in
+if (!isset($_SESSION['user_logged_in'])) {
+    header('Location: ../Auth/login.php');
+    exit;
+}
+
+require_once __DIR__ .  "../Config/database.php";
+include_once __DIR__ . "../Config/info.php";
+
+$id_movie = $_GET['id'];
+$id_tv = $_GET['id'];
+$type = $_GET['type'];
+
+if ($type === 'tv') {
+    include_once "../API/api_tv_id.php";
+    include_once "..API/api_tv_video_id.php";
+    include_once "../API/api_tv.php";
+    include_once "../API/api_tv_similar.php";
+} else {
+    include_once "../API/api_movie_id.php";
+    include_once "../API/api_movie_video_id.php";
+    include_once "../API/api_movie_similar.php";
+    include_once "../API/api_tv_id.php";
+}
+
+
+
   
 ?>
 
@@ -28,12 +45,12 @@
   <!-- 
     - favicon
   -->
-  <link rel="shortcut icon" href="./icon.png" type="image/svg+xml">
+  <link rel="shortcut icon" href="../Assets/images/icon.png" type="image/png">
 
   <!-- 
     - custom css link
   -->
-  <link rel="stylesheet" href="./assets/css/style.css">
+  <link rel="stylesheet" href="../Assets/css/style.css">
 
   <!-- 
     - google font link
@@ -46,7 +63,7 @@
 
 <body id="#top">
 
-<?php include_once __DIR__ . '/header.php'; ?>
+<?php include_once __DIR__ . './header.php'; ?>
 
    <main>
     <article>
@@ -71,8 +88,8 @@
 
               <div class="badge-wrapper">
                 <div class="badge badge-outline">
-                  <a href="<?php echo htmlspecialchars($movie_id->homepage ?? $tv_id->homepage)?>" style="text-decoration: none; color: inherit;">
-                      <?php echo htmlspecialchars(strtoupper($movie_id->original_language ?? $tv_id->original_language)); ?> 
+                  <a style="text-decoration: none; color: inherit;">
+                      <?php echo htmlspecialchars($movie_id->status ?? $tv_id->status)?> 
                   </a>
                 </div>
               </div>
@@ -90,7 +107,7 @@
 
               foreach ($genres_to_display as $genre_item): 
               ?>
-              <a href="#"><?php echo htmlspecialchars($genre_item->name) ?></a>
+              <a><?php echo htmlspecialchars($genre_item->name) ?></a>
               <?php endforeach; ?>
           </div>
 
@@ -129,8 +146,8 @@
 
             </div>
 
-            <a href="https://image.tmdb.org/t/p/w500 <?php echo htmlspecialchars($movie_id->poster_path); ?>" download class="download-btn">
-              <span>Download Poster</span>
+            <a href="<?php echo htmlspecialchars($movie_id->homepage ?? $tv_id->homepage); ?>" download class="download-btn">
+              <span>Official Website</span>
               <ion-icon name="download-outline"></ion-icon>
             </a>
 
@@ -203,7 +220,7 @@
   </div>
 </section>
 
- <section class="upcoming" style="background-image: url('./assets/images/tv-series-bg.jpg'); padding-top:20px ;">
+ <section class="upcoming" style="background-image: url('./Assets/images/tv-series-bg.jpg'); padding-top:20px ;">
    <div class="container">
 
         <div class="flex-wrapper" style="margin-bottom: 25px;">
@@ -220,12 +237,12 @@
 
      <ul class="movies-list has-scrollbar" id="anime_collection">
   <?php
-// Check if either movie_similar_id or tv_similar_id has results
+
 if (isset($movie_similar_id->results) && is_array($movie_similar_id->results) && !empty($movie_similar_id->results)) {
     foreach ($movie_similar_id->results as $similar): ?>
         <li data-category="<?= htmlspecialchars($similar->genre_ids[0] ?? '') ?>">
             <div class="movie-card">
-                <a href="movie-details_copy.php?id=<?= htmlspecialchars($similar->id) ?>">
+                <a href="./details.php?id=<?= htmlspecialchars($similar->id) ?>&type=movie">
                     <figure class="card-banner">
                         <img src="https://image.tmdb.org/t/p/w500<?= htmlspecialchars($similar->poster_path) ?>" 
                              alt="<?= htmlspecialchars($similar->title ?? $similar->name) ?> poster" 
@@ -234,7 +251,7 @@ if (isset($movie_similar_id->results) && is_array($movie_similar_id->results) &&
                 </a>
 
                 <div class="title-wrapper">
-                    <a href="movie-details_copy.php?id=<?= htmlspecialchars($similar->id) ?>">
+                    <a href="./details.php?id=<?= htmlspecialchars($similar->id) ?>&type=movie">
                         <h3 class="card-title"><?= htmlspecialchars($similar->title ?? $similar->name ?? 'N/A') ?></h3>
                     </a>
                     <time datetime="<?= htmlspecialchars(substr($similar->release_date ?? $similar->first_air_date ?? '', 0, 4)) ?>">
@@ -249,15 +266,16 @@ if (isset($movie_similar_id->results) && is_array($movie_similar_id->results) &&
                         <ion-icon name="star"></ion-icon>
                         <data><?= number_format($similar->vote_average ?? 0, 1) ?>/10</data>
                     </div>
-                </div>
-            </div>
+                    </div>
+                    </div>
+            
         </li>
     <?php endforeach;
 } elseif (isset($tv_similar_id->results) && is_array($tv_similar_id->results) && !empty($tv_similar_id->results)) {
     foreach ($tv_similar_id->results as $similar): ?>
         <li data-category="<?= htmlspecialchars($similar->genre_ids[0] ?? '') ?>">
             <div class="movie-card">
-                <a href="movie-details_copy.php?id=<?= htmlspecialchars($similar->id) ?>">
+                <a href="./details.php?id=<?= htmlspecialchars($similar->id) ?>&type=tv">
                     <figure class="card-banner">
                         <img src="https://image.tmdb.org/t/p/w500<?= htmlspecialchars($similar->poster_path) ?>" 
                              alt="<?= htmlspecialchars($similar->name ?? $similar->title) ?> poster" 
@@ -266,7 +284,7 @@ if (isset($movie_similar_id->results) && is_array($movie_similar_id->results) &&
                 </a>
 
                 <div class="title-wrapper">
-                    <a href="movie-details_copy.php?id=<?= htmlspecialchars($similar->id) ?>">
+                    <a href="./details.php?id=<?= htmlspecialchars($similar->id) ?>&type=tv">
                         <h3 class="card-title"><?= htmlspecialchars($similar->name ?? $similar->title ?? 'N/A') ?></h3>
                     </a>
                     <time datetime="<?= htmlspecialchars(substr($similar->first_air_date ?? $similar->release_date ?? '', 0, 4)) ?>">
@@ -303,7 +321,7 @@ if (isset($movie_similar_id->results) && is_array($movie_similar_id->results) &&
   <!-- 
     - #FOOTER
   -->
-<?php include __DIR__ . '/footer.php'; ?>
+<?php include __DIR__ . './footer.php'; ?>
 
 
   <!-- 
@@ -321,7 +339,7 @@ if (isset($movie_similar_id->results) && is_array($movie_similar_id->results) &&
   <!-- 
     - custom js link
   -->
-  <script src="./assets/js/script.js"></scrip>
+  <script src="../Assets/js/script.js"></scrip>
 
   <!-- 
     - ionicon link
