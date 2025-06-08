@@ -52,8 +52,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register | Frame X</title>
-    <link rel="stylesheet" href="./.Assets/css/style.css">
-    <link rel="icon" href="../Assets/images/icon.png" type="image/png">
+    <link rel="stylesheet" href="./.Asset/css/style.css">
+    <link rel="icon" href="../Asset/images/icon.png" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -64,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="container flex items-center justify-center min-h-screen px-6 mx-auto">
         <form class="w-full max-w-md" method="POST" action="register.php">
             <div class="flex justify-center mx-auto">
-                <img class="w-auto h-14 sm:h-15" src="Assets/images/iconname.png" alt="">
+                <img class="w-auto h-14 sm:h-15" src="Asset/images/iconname.png" alt="">
             </div>
             
             <!-- Menampilkan pesan error/success -->

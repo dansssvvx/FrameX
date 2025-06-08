@@ -7,7 +7,7 @@
         <div class="footer-brand-wrapper">
 
           <a href="./index.php" class="logo">
-            <img src="../Assets/images/iconname.png" alt="Frame X logo" style="width: 150px; height: 64.8px;">
+            <img src="../Asset/images/iconname.png" alt="Frame X logo" style="width: 150px; height: 64.8px;">
           </a>
 
           <ul class="footer-list">
@@ -100,7 +100,7 @@
           &copy; 2025 <a href="#">Kelompok 2 Project PemWeb</a>. All Rights Reserved
         </p>
 
-        <img src="../Assets/images/footerimg.png" style="height: 3252,1px; width: 300px;" alt="Platform Movie companies logo" class="footer-bottom-img">
+        <img src="../Asset/images/footerimg.png" style="height: 3252,1px; width: 300px;" alt="Platform Movie companies logo" class="footer-bottom-img">
 
       </div>
     </div>

@@ -4,7 +4,7 @@
       <div class="overlay" data-overlay></div>
 
       <a href="./index.php" class="logo">
-        <img src="../Assets/images/iconname.png" alt="Frame X logo" style="width: 100px; height: 43.2px;">
+        <img src="../Asset/images/iconname.png" alt="Frame X logo" style="width: 100px; height: 43.2px;">
       </a>
 
       <div class="header-actions">
@@ -41,7 +41,7 @@
         <div class="navbar-top">
 
           <a href="./index.html" class="logo">
-            <img src="./Assets/images/iconanme.png" alt="FrameX logo">
+            <img src="./Asset/images/iconanme.png" alt="FrameX logo">
           </a>
 
           <button class="menu-close-btn" data-menu-close-btn>
