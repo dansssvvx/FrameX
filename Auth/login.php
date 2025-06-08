@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             
             // Redirect ke halaman yang sesuai
-            header('Location: Public/index.php');
+            header('Location: ../Public/index.php');
             exit;
         } else {
             $error = "Invalid username or password";

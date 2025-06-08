@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once 'Conf/database.php';
+require_once '../Conf/database.php';
 
 $error = '';
 $success = '';
@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $result = $stmt->execute([$username, $email, $hashed_password, $is_admin]);
             
             if ($result) {
-                $success = "Registration successful! You can now login.";
+                $success = "Registration successful! You can login now.";
                 // Redirect ke halaman login setelah 2 detik
                 header("refresh:2;url=login.php");
             } else {
@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register | Frame X</title>
-    <link rel="stylesheet" href="./.Assets/css/style.css">
+    <link rel="stylesheet" href="../Assets/css/style.css">
     <link rel="icon" href="../Assets/images/icon.png" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -175,4 +175,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </section>
 
 <!-- Footer dan script lainnya tetap sama -->
-<?php include __DIR__ . '/footer.php'; ?>
+<?php include_once '../Public/footer.php'; ?>
