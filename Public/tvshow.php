@@ -22,12 +22,12 @@ include "../API/api_tv.php";
   <!-- 
     - favicon
   -->
-  <link rel="shortcut icon" href="../Asset/images/icon.png" type="image/png">
+  <link rel="shortcut icon" href="../Assets/images/icon.png" type="image/png">
 
   <!-- 
     - custom css link
   -->
-  <link rel="stylesheet" href="../Asset/css/style.css">
+  <link rel="stylesheet" href="../Assets/css/style.css">
 
   <!-- 
     - google font link
@@ -152,7 +152,7 @@ include "../API/api_tv.php";
   <!-- 
     - custom js link
   -->
-  <script src="../Asset/js/script.js"></script>
+  <script src="../Assets/js/script.js"></script>
 
   <!-- 
     - ionicon link

@@ -45,12 +45,12 @@ if ($type === 'tv') {
   <!-- 
     - favicon
   -->
-  <link rel="shortcut icon" href="../Asset/images/icon.png" type="image/png">
+  <link rel="shortcut icon" href="../Assets/images/icon.png" type="image/png">
 
   <!-- 
     - custom css link
   -->
-  <link rel="stylesheet" href="../Asset/css/style.css">
+  <link rel="stylesheet" href="../Assets/css/style.css">
 
   <!-- 
     - google font link
@@ -220,7 +220,7 @@ if ($type === 'tv') {
   </div>
 </section>
 
- <section class="upcoming" style="background-image: url('./Asset/images/tv-series-bg.jpg'); padding-top:20px ;">
+ <section class="upcoming" style="background-image: url('./Assets/images/tv-series-bg.jpg'); padding-top:20px ;">
    <div class="container">
 
         <div class="flex-wrapper" style="margin-bottom: 25px;">
@@ -339,7 +339,7 @@ if (isset($movie_similar_id->results) && is_array($movie_similar_id->results) &&
   <!-- 
     - custom js link
   -->
-  <script src="../Asset/js/script.js"></scrip>
+  <script src="../Assets/js/script.js"></scrip>
 
   <!-- 
     - ionicon link

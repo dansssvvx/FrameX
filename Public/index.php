@@ -22,12 +22,12 @@ include_once '../API/api_now.php';
   <!-- 
     - favicon
   -->
-  <link rel="shortcut icon" href="../Asset/images/icon.png" type="image/png">
+  <link rel="shortcut icon" href="../Assets/images/icon.png" type="image/png">
 
   <!-- 
     - custom css link
   -->
-  <link rel="stylesheet" href="../Asset/css/style.css">
+  <link rel="stylesheet" href="../Assets/css/style.css">
 
   <!-- 
     - google font link
@@ -48,7 +48,7 @@ include_once '../API/api_now.php';
         - #HERO
       -->
 
-      <section class="hero" style="background-image: url('../Asset/images/bghero.jpg');" data-hero>
+      <section class="hero" style="background-image: url('../Assets/images/bghero.jpg');" data-hero>
         <div class="container">
 
           <div class="hero-content">
@@ -109,7 +109,7 @@ include_once '../API/api_now.php';
         - #UPCOMING
       -->
 
-<section class="upcoming" style="background-image: url('../Asset/images/top-rated-bg.jpg');">
+<section class="upcoming" style="background-image: url('../Assets/images/top-rated-bg.jpg');">
     <div class="container">
 
         <div class="flex-wrapper">
@@ -255,7 +255,7 @@ include_once '../API/api_now.php';
         - #Popular
       -->
 
-  <section class="upcoming" style="background-image: url('../Asset/images/top-rated-bg.jpg');">
+  <section class="upcoming" style="background-image: url('../Assets/images/top-rated-bg.jpg');">
    <div class="container">
 
         <div class="flex-wrapper">
@@ -304,7 +304,7 @@ include_once '../API/api_now.php';
 
 <!-- Now Playing -->
 
-  <section class="upcoming" style="background-image: url('../Asset/images/tv-series-bg.jpg');">
+  <section class="upcoming" style="background-image: url('../Assets/images/tv-series-bg.jpg');">
    <div class="container">
 
         <div class="flex-wrapper">
@@ -376,7 +376,7 @@ include_once '../API/api_now.php';
   <!-- 
     - custom js link
   -->
-  <script src="../Asset/js/script.js"></script>
+  <script src="../Assets/js/script.js"></script>
 
   <!-- 
     - ionicon link
