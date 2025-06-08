@@ -1599,3 +1599,25 @@ grid-row-gap: 0px;
 .div8 { grid-area: 3 / 1 / 4 / 2; }
 .div9 { grid-area: 3 / 2 / 4 / 3; }
 .div10 { grid-area: 3 / 3 / 4 / 4; }
+
+/*-----------------------------------*\
+ * #ASPECT RATIO HELPER
+\*-----------------------------------*/
+
+.aspect-ratio-16-9 {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%; /* Ini adalah 9 / 16 * 100% */
+    overflow: hidden; /* Pastikan konten yang melebihi batas tersembunyi */
+}
+
+/* Aturan untuk gambar di dalam kontainer rasio aspek */
+.aspect-ratio-16-9 img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Pastikan gambar mengisi seluruh area tanpa distorsi */
+    object-position: center; /* Pusatkan gambar */
+}
