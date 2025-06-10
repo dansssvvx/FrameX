@@ -8,18 +8,9 @@ if (!isset($_SESSION['user_logged_in']) || !$_SESSION['is_admin']) {
 }
 include "../Conf/info.php";
 include "../Conf/database.php";
-include "../API/api_discover_movie.php";
-include "../API/api_discover_tv.php";
-include "../API/api_trending.php";
-include "../API/api_popular.php";
-include "../API/api_toprated.php";
-include "../API/api_upcoming.php";
-include "../API/api_tv.php";
 
-$stmt = $db->query("SELECT COUNT(*) FROM users WHERE is_admin = 0");
-$stmt1 = $db->query("SELECT COUNT(*) FROM users WHERE is_admin = 1");
-$countuser = $stmt->fetchColumn();
-$countadmin = $stmt1->fetchColumn();
+$stmt = $db->query("SELECT * FROM log ORDER BY tanggal_log DESC");
+$logs = $stmt->fetchAll();
 
 $stmt2 = $db->query("SELECT username FROM users WHERE id =".$_SESSION['user_id']);
 $username = $stmt2->fetchColumn();
@@ -111,7 +102,7 @@ $username = $stmt2->fetchColumn();
 
         </li> 
         <li>
-           <a href="./index.php" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-app-white dark:bg-gunmetal-2 group"> <svg class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-x group-hover:text-gray-900 dark:group-hover:text-app-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 21"> <path d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z"/>
+           <a href="./index.php" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-app-white dark:hover:bg-gunmetal-2 group"> <svg class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-x group-hover:text-gray-900 dark:group-hover:text-app-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 21"> <path d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z"/>
                    <path d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z"/>
                </svg>
                <span class="ms-3">Dashboard</span>
@@ -146,7 +137,7 @@ $username = $stmt2->fetchColumn();
                <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-gunmetal-2 dark:text-gray-x">3</span> </a>
          </li>
         <li>
-           <a href="./log.php" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-app-white hover:bg-gray-100 dark:hover:bg-gunmetal-2 group"> 
+           <a href="./log.php" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-app-white  dark:bg-gunmetal-2 group"> 
             
            <svg  class="shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-x group-hover:text-gray-900 dark:group-hover:text-app-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
             <path fill-rule="evenodd" d="M4.125 3C3.089 3 2.25 3.84 2.25 4.875V18a3 3 0 0 0 3 3h15a3 3 0 0 1-3-3V4.875C17.25 3.839 16.41 3 15.375 3H4.125ZM12 9.75a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5H12Zm-.75-2.25a.75.75 0 0 1 .75-.75h1.5a.75.75 0 0 1 0 1.5H12a.75.75 0 0 1-.75-.75ZM6 12.75a.75.75 0 0 0 0 1.5h7.5a.75.75 0 0 0 0-1.5H6Zm-.75 3.75a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5H6a.75.75 0 0 1-.75-.75ZM6 6.75a.75.75 0 0 0-.75.75v3c0 .414.336.75.75.75h3a.75.75 0 0 0 .75-.75v-3A.75.75 0 0 0 9 6.75H6Z" clip-rule="evenodd" />
@@ -171,7 +162,7 @@ $username = $stmt2->fetchColumn();
 <div class="p-4 sm:ml-64 bg-rich-black-fogra-39 px-20 py-10">
 
 <div class="title-wrapper" style="padding-bottom:20px;">
-    <h2 class="h2 section-title" style="text-align:left;"><strong>Dashboard</strong></h2>
+    <h2 class="h2 section-title" style="text-align:left;"><strong>Logs</strong></h2>
 </div>
 
 <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -179,63 +170,31 @@ $username = $stmt2->fetchColumn();
         <thead class="text-xs text-gray-700 uppercase dark:bg-light-gray dark:text-black">
             <tr>
                 <th scope="col" class="px-6 py-3">
-                    Category
+                    No
                 </th>
                 <th scope="col" class="px-6 py-3">
-                    Total Items
+                    Description
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Timestamp
                 </th>
             </tr>
         </thead>
         <tbody>
+        <?php $no = 1; ?>
+        <?php foreach ($logs as $l): ?>
             <tr class="bg-white border-b bg-gray-50 dark:bg-eerie-black dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 font-poppins">
-                <?php ?>
                 <th scope="row" class="px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
-                    Movies
+                    <?php echo htmlspecialchars($no++) ?>
                 </th>
-                <td class="px-6 py-4 text-white">
-                    <?php echo htmlspecialchars(number_format($discover_movie->total_results,0,',','.')) ?>
+                <td class="px-6 py-4 text-white font-poppins">
+                    <?php echo htmlspecialchars($l['isi_log'])?>
                 </td>
-                <td class="flex items-center px-6 py-4">
-                    <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                    <a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline ms-3">Remove</a>
+                <td class="px-6 py-4 text-white font-poppins">
+                    <?php echo htmlspecialchars($l['tanggal_log'])?>
                 </td>
             </tr>
-            <tr class="bg-white border-b bg-gray-50 dark:bg-eerie-black dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    TV Show
-                </th>
-                <td class="px-6 py-4 text-white">
-                    <?php echo htmlspecialchars(number_format($discover_tv->total_results,0,',','.')) ?>
-                </td>
-                <td class="flex items-center px-6 py-4">
-                    <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                    <a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline ms-3">Remove</a>
-                </td>
-            </tr>
-            <tr class="bg-white border-b bg-gray-50 dark:bg-eerie-black dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    User
-                </th>
-                <td class="px-6 py-4 text-white">
-                    <?php echo $countuser?>
-                </td>
-                <td class="flex items-center px-6 py-4">
-                    <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                    <a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline ms-3">Remove</a>
-                </td>
-            </tr>
-            <tr class="bg-white border-b bg-gray-50 dark:bg-eerie-black dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    Admin
-                </th>
-                <td class="px-6 py-4 text-white">
-                    <?php echo $countadmin ?>
-                </td>
-                <td class="flex items-center px-6 py-4">
-                    <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                    <a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline ms-3">Remove</a>
-                </td>
-            </tr>
+        <?php endforeach; ?>
         </tbody>
     </table>
 </div>
@@ -243,4 +202,4 @@ $username = $stmt2->fetchColumn();
 </div>
 
 </body>
-</html>
+</html>a

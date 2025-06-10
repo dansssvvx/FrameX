@@ -17,23 +17,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $user = $stmt->fetch();
         
         if ($user && password_verify($password, $user['password'])) {
-            // Set session
+
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $user['username'];
             $_SESSION['is_admin'] = $user['is_admin'];
             $_SESSION['user_logged_in'] = true;
-            // Jika user adalah admin, redirect ke halaman admin
-            if ($user['is_admin']) {
+
+            $stmt1 = $db->prepare( "INSERT INTO log (isi_log, tanggal_log, id_user) VALUES ( ?, NOW(), ?)");
+            if (!$user['is_admin']) {
+              $role = "user";
+            } else{
+              $role = "admin";
+            }
+            $isilog = $username . " (" . $role .") berhasil login";
+            $stmt1->execute([$isilog, $_SESSION['user_id']]);
+
+            if (!$user['is_admin']) {
+                header('Location: ../Public/index.php');
+                exit;
+            } else{
                 header('Location: ../Admin/index.php');
                 exit;
             }
             
-            // Redirect ke halaman yang sesuai
-            header('Location: ../Public/index.php');
-            exit;
         } else {
             $error = "Invalid username or password";
         }
+
+
     }
 }
 ?>
@@ -57,10 +68,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <div class="container flex items-center justify-center min-h-screen px-6 mx-auto">
     <form class="w-full max-w-md" method="POST" action="login.php">
       <div class="flex justify-center mx-auto">
-        <img class="w-auto h-14 sm:h-15" src="Assets/images/iconname.png" alt="">
+        <img class="w-auto h-14 sm:h-15" src="../Assets/images/iconname.png" alt="">
       </div>
 
-      <!-- Tampilkan pesan error -->
       <?php if (!empty($error)): ?>
         <div class="p-3 mb-4 text-red-700 bg-red-100 rounded-lg">
           <?php echo htmlspecialchars($error); ?>
@@ -129,7 +139,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   </div>
 </section>
 
-<?php include __DIR__ . '/footer.php'; ?>
+<?php include '../Public/footer.php'; ?>
 
 <!-- Script lainnya tetap sama -->
 </body>

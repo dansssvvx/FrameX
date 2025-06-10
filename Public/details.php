@@ -7,8 +7,8 @@ if (!isset($_SESSION['user_logged_in'])) {
     exit;
 }
 
-require_once __DIR__ .  "../Conf/database.php";
-include_once __DIR__ . "../Conf/info.php";
+require_once "../Conf/database.php";
+include_once "../Conf/info.php";
 
 $id_movie = $_GET['id'];
 $id_tv = $_GET['id'];
@@ -16,7 +16,7 @@ $type = $_GET['type'];
 
 if ($type === 'tv') {
     include_once "../API/api_tv_id.php";
-    include_once "..API/api_tv_video_id.php";
+    include_once "../API/api_tv_video_id.php";
     include_once "../API/api_tv.php";
     include_once "../API/api_tv_similar.php";
 } else {
@@ -79,9 +79,11 @@ if ($type === 'tv') {
 
           <div class="movie-detail-content">    
             <h1 class="h1 detail-title">
-              <a href="<?php echo htmlspecialchars($movie_id->homepage ?? $tv_id->homepage)?>" style="color: inherit;">
-              <?php echo htmlspecialchars($movie_id->title ?? $tv_id->name); ?>
-              </a>
+              <strong>
+                <a href="<?php echo htmlspecialchars($movie_id->homepage ?? $tv_id->homepage)?>" style="color: white;">
+                <?php echo htmlspecialchars($movie_id->title ?? $tv_id->name); ?> </strong>
+                </a>
+
             </h1>
 
             <div class="meta-wrapper">
@@ -123,20 +125,35 @@ if ($type === 'tv') {
 
             </div>
 
-            <p class="storyline">
+            <p class="storyline"><strong>Overview</strong><br>
               <?php echo htmlspecialchars($movie_id->overview ?? $tv_id->overview); ?>
+              <br>
+              <em><?php echo htmlspecialchars($movie_id->tagline ?? $tv_id->tagline ?? "")?></em>
+              
+            <?php if ($type === 'tv') { ?>
+              <br><br>
+              Total Episodes: <?php echo $tv_id->number_of_episodes ?? 'N/A'; ?><br>
+              Total Seasons/Arcs : <?php echo $tv_id->number_of_seasons ?? 'N/A'; ?>
+            <?php } ?>
+
             </p>
 
             <div class="details-actions">
 
-              <button class="share">
-                <ion-icon name="share-social"></ion-icon>
-                <span>Share</span>
-              </button>
-
               <div class="title-wrapper">
-                <p class="title">IMDb Rating: <?php echo htmlspecialchars($movie_id->vote_average ?? $tv_id->vote_average); ?></p>
-                <p class="text">Popularity: <?php echo htmlspecialchars($movie_id->popularity ?? $tv_id->popularity)?></p>
+                <p class="title">IMDb Rating: <?php echo number_format($movie_id->vote_average ?? $tv_id->vote_average, 1); ?>/10</p>
+                <p class="text">
+                Revenue :
+                <?php
+                  $revenue = $movie_id->revenue ?? null;
+                  if ($revenue && $revenue > 0) {
+                    echo '$' . number_format($revenue, 0, '.', ',');
+                  } else {
+                    echo 'N/A';
+                  }
+                ?>
+              </p>
+
               </div>
 
               <button class="btn btn-primary">

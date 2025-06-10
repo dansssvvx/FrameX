@@ -64,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="container flex items-center justify-center min-h-screen px-6 mx-auto">
         <form class="w-full max-w-md" method="POST" action="register.php">
             <div class="flex justify-center mx-auto">
-                <img class="w-auto h-14 sm:h-15" src="Assets/images/iconname.png" alt="">
+                <img class="w-auto h-14 sm:h-15" src="../Assets/images/iconname.png" alt="">
             </div>
             
             <!-- Menampilkan pesan error/success -->
