@@ -16,10 +16,9 @@ $id = $_POST['id'];
 $title = $_POST['title'];
 $overview = $_POST['overview'];
 $tagline = $_POST['tagline'];
-$first_air_date = $_POST['first_air_date'];
+$release_date = $_POST['release_date'];
 $status = $_POST['status'];
-$total_episodes = $_POST['total_episodes'];
-$total_seasons = $_POST['total_seasons'];
+$revenue = $_POST['revenue'];
 $homepage = $_POST['homepage'];
 $poster_path = $_POST['poster'];
 $genres = $_POST['genres'] ?? [];
@@ -27,14 +26,13 @@ $genres = $_POST['genres'] ?? [];
 try {
     $db->beginTransaction();
     
-    $stmt = $db->prepare("UPDATE custom_tv_show SET 
+    $stmt = $db->prepare("UPDATE custom_movie SET 
         title = ?, 
         overview = ?, 
         tagline = ?, 
-        first_air_date = ?, 
+        release_date = ?, 
         status = ?, 
-        total_episodes = ?, 
-        total_seasons = ?, 
+        revenue = ?, 
         homepage = ?, 
         poster_path = ? 
         WHERE id = ?");
@@ -43,29 +41,28 @@ try {
         $title,
         $overview,
         $tagline,
-        $first_air_date,
+        $release_date,
         $status,
-        $total_episodes,
-        $total_seasons,
+        $revenue,
         $homepage,
         $poster_path,
         $id
     ]);
     
     // Update genres
-    $db->prepare("DELETE FROM tvshow_genre WHERE tvshow_id = ?")->execute([$id]);
+    $db->prepare("DELETE FROM movie_genre WHERE movie_id = ?")->execute([$id]);
     
-    $stmt = $db->prepare("INSERT INTO tvshow_genre (tvshow_id, genre_id) VALUES (?, ?)");
+    $stmt = $db->prepare("INSERT INTO movie_genre (movie_id, genre_id) VALUES (?, ?)");
     foreach ($genres as $genreId) {
         $stmt->execute([$id, $genreId]);
     }
     
     $db->commit();
-    $_SESSION['success'] = "TV Show updated successfully!";
+    $_SESSION['success'] = "Movie updated successfully!";
 } catch (PDOException $e) {
     $db->rollBack();
-    $_SESSION['error'] = "Error updating TV Show: " . $e->getMessage();
+    $_SESSION['error'] = "Error updating movie: " . $e->getMessage();
 }
 
-header("Location: tv.php");
+header("Location: movie.php");
 exit;

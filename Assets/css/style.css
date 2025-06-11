@@ -1619,6 +1619,6 @@ grid-row-gap: 0px;
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Pastikan gambar mengisi seluruh area tanpa distorsi */
-    object-position: center; /* Pusatkan gambar */
+    object-fit: cover;  
+    object-position: center;
 }

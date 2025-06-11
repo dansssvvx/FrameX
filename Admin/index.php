@@ -24,6 +24,12 @@ $countadmin = $stmt1->fetchColumn();
 $stmt2 = $db->query("SELECT username FROM users WHERE id =".$_SESSION['user_id']);
 $username = $stmt2->fetchColumn();
 
+$stmt3 = $db->query("SELECT COUNT(*) FROM custom_movie");
+$countcustom = $stmt3->fetchColumn();
+
+$stmt4 = $db->query("SELECT COUNT(*) FROM custom_tv_show");
+$countcustomtv = $stmt4->fetchColumn();
+
 ?>
 
 <!DOCTYPE html>
@@ -181,7 +187,7 @@ $username = $stmt2->fetchColumn();
                 <th scope="col" class="px-6 py-3">
                     Category
                 </th>
-                <th scope="col" class="px-6 py-3">
+                <th scope="col" class="px-6 py-4">
                     Total Items
                 </th>
             </tr>
@@ -193,11 +199,9 @@ $username = $stmt2->fetchColumn();
                     Movies
                 </th>
                 <td class="px-6 py-4 text-white">
-                    <?php echo htmlspecialchars(number_format($discover_movie->total_results,0,',','.')) ?>
-                </td>
-                <td class="flex items-center px-6 py-4">
-                    <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                    <a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline ms-3">Remove</a>
+                    <?php 
+                    $total_movies = $discover_movie->total_results + $countcustom;
+                    echo htmlspecialchars(number_format($total_movies,0,',','.')) ?>
                 </td>
             </tr>
             <tr class="bg-white border-b bg-gray-50 dark:bg-eerie-black dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
@@ -205,11 +209,8 @@ $username = $stmt2->fetchColumn();
                     TV Show
                 </th>
                 <td class="px-6 py-4 text-white">
-                    <?php echo htmlspecialchars(number_format($discover_tv->total_results,0,',','.')) ?>
-                </td>
-                <td class="flex items-center px-6 py-4">
-                    <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                    <a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline ms-3">Remove</a>
+                    <?php  $total_tvshow = $discover_tv->total_results + $countcustomtv;
+                    echo htmlspecialchars(number_format($total_tvshow,0,',','.')) ?>
                 </td>
             </tr>
             <tr class="bg-white border-b bg-gray-50 dark:bg-eerie-black dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
@@ -219,10 +220,6 @@ $username = $stmt2->fetchColumn();
                 <td class="px-6 py-4 text-white">
                     <?php echo $countuser?>
                 </td>
-                <td class="flex items-center px-6 py-4">
-                    <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                    <a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline ms-3">Remove</a>
-                </td>
             </tr>
             <tr class="bg-white border-b bg-gray-50 dark:bg-eerie-black dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
@@ -231,11 +228,7 @@ $username = $stmt2->fetchColumn();
                 <td class="px-6 py-4 text-white">
                     <?php echo $countadmin ?>
                 </td>
-                <td class="flex items-center px-6 py-4">
-                    <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                    <a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline ms-3">Remove</a>
-                </td>
-            </tr>
+             </tr>
         </tbody>
     </table>
 </div>

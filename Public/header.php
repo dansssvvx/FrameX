@@ -53,19 +53,19 @@
         <ul class="navbar-list">
 
           <li>
-            <a href="index.php" class="navbar-link">Home</a>
+            <a href="./index.php" class="navbar-link">Home</a>
           </li>
 
           <li>
-            <a href="trending.php" class="navbar-link">Trending</a>
+            <a href="./trending.php" class="navbar-link">Trending</a>
           </li>
 
           <li>
-            <a href="tvshow.php" class="navbar-link">Tv Show</a>
+            <a href="./tvshow.php" class="navbar-link">Tv Show</a>
           </li>
 
           <li>
-            <a href="#" class="navbar-link">Anime</a>
+            <a href="./custommovie.php" class="navbar-link">Editor's Choice</a>
           </li>
 
           <li>

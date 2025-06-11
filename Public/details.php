@@ -1,7 +1,6 @@
 <?php
 
 session_start();
-// Check if the user is logged in
 if (!isset($_SESSION['user_logged_in'])) {
     header('Location: ../Auth/login.php');
     exit;
@@ -9,9 +8,9 @@ if (!isset($_SESSION['user_logged_in'])) {
 
 require_once "../Conf/database.php";
 include_once "../Conf/info.php";
-
-$id_movie = $_GET['id'];
 $id_tv = $_GET['id'];
+$id_movie = $_GET['id'];
+$id_custom_movie = $_GET['id'];
 $type = $_GET['type'];
 
 if ($type === 'tv') {
@@ -19,11 +18,14 @@ if ($type === 'tv') {
     include_once "../API/api_tv_video_id.php";
     include_once "../API/api_tv.php";
     include_once "../API/api_tv_similar.php";
-} else {
+} elseif ($type === 'movie') {
     include_once "../API/api_movie_id.php";
     include_once "../API/api_movie_video_id.php";
     include_once "../API/api_movie_similar.php";
     include_once "../API/api_tv_id.php";
+}else {
+    $stmt = $db->query("SELECT * FROM custom_movie WHERE id =". $id_custom_movie);
+    $custom_movie = $stmt->fetch();
 }
 
 
@@ -39,26 +41,16 @@ if ($type === 'tv') {
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>
-    <?php echo htmlspecialchars($movie_id->title ?? $tv_id->name); ?> (<?php echo htmlspecialchars(substr($movie_id->release_date ?? $tv_id->first_air_date, 0, 4)); ?>)
+    <?php echo htmlspecialchars($movie_id->title ?? $tv_id->name ?? $custom_movie['title'] )?> (<?php echo htmlspecialchars(substr($movie_id->release_date ?? $tv_id->first_air_date ?? $custom_movie['release_date'], 0, 4)); ?>)
 </title>
 
-  <!-- 
-    - favicon
-  -->
   <link rel="shortcut icon" href="../Assets/images/icon.png" type="image/png">
-
-  <!-- 
-    - custom css link
-  -->
   <link rel="stylesheet" href="../Assets/css/style.css">
-
-  <!-- 
-    - google font link
-  -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
+
 </head>
 
 <body id="#top">
@@ -72,16 +64,24 @@ if ($type === 'tv') {
 
         <div class="container">
 
-          <figure class="movie-detail-banner">
-           <img src="https://image.tmdb.org/t/p/w500<?= $movie_id->poster_path ?? $tv_id->poster_path?>" alt="<?= htmlspecialchars($movie_id->title ?? $tv_id->name) ?> poster">
-
-          </figure>
+        <figure class="movie-detail-banner">
+          <img src="<?php 
+          if($type === 'tv') {
+              echo 'https://image.tmdb.org/t/p/w500' . htmlspecialchars($tv_id->poster_path ?? $custom_movie['poster_path']);
+          } elseif ($type === 'movie') {
+              echo 'https://image.tmdb.org/t/p/w500' . htmlspecialchars($movie_id->poster_path ?? $custom_movie['poster_path']);
+          } else {
+              echo $custom_movie['poster_path'];
+          }
+          ?>" 
+              alt="<?php echo $movie_id->title ?? $tv_id->name ?? $custom_movie['title'] ?? 'Movie Poster' ?>">
+        </figure>
 
           <div class="movie-detail-content">    
             <h1 class="h1 detail-title">
               <strong>
-                <a href="<?php echo htmlspecialchars($movie_id->homepage ?? $tv_id->homepage)?>" style="color: white;">
-                <?php echo htmlspecialchars($movie_id->title ?? $tv_id->name); ?> </strong>
+                <a href="<?php echo htmlspecialchars($movie_id->homepage ?? $tv_id->homepage ?? $custom_movie['homepage'])?>" style="color: white;">
+                <?php echo htmlspecialchars($movie_id->title ?? $tv_id->name ?? $custom_movie['title'])?> </strong>
                 </a>
 
             </h1>
@@ -91,33 +91,77 @@ if ($type === 'tv') {
               <div class="badge-wrapper">
                 <div class="badge badge-outline">
                   <a style="text-decoration: none; color: inherit;">
-                      <?php echo htmlspecialchars($movie_id->status ?? $tv_id->status)?> 
+                      <?php echo $movie_id->status ?? $tv_id->status ?? $custom_movie['status']?> 
                   </a>
                 </div>
               </div>
 
-          <div class="ganre-wrapper" >
-              <?php
-              $genres_to_display = [];
+            <div class="ganre-wrapper">
+                <?php
+                $genres_to_display = [];
 
-              if (isset($movie_id) && is_object($movie_id) && isset($movie_id->genres) && is_array($movie_id->genres)) {
-                  $genres_to_display = $movie_id->genres;
-              } 
-              elseif (isset($tv_id) && is_object($tv_id) && isset($tv_id->genres) && is_array($tv_id->genres)) {
-                  $genres_to_display = $tv_id->genres;
-              }
+                // Check for movie genres
+                if (isset($movie_id) && is_object($movie_id) && isset($movie_id->genres) && is_array($movie_id->genres)) {
+                    $genres_to_display = $movie_id->genres;
+                } 
+                // Check for TV show genres
+                elseif (isset($tv_id) && is_object($tv_id) && isset($tv_id->genres) && is_array($tv_id->genres)) {
+                    $genres_to_display = $tv_id->genres;
+                } 
+                // Fallback to database query for custom movies
+                elseif (isset($custom_movie) && is_array($custom_movie)) {
+                    // Get genres for custom movie
+                    $stmt5 = $db->prepare("SELECT genre_id FROM movie_genre WHERE movie_id = :movie_id");
+                    $stmt5->execute([':movie_id' => $custom_movie['id']]);
+                    $genres = $stmt5->fetchAll();
 
-              foreach ($genres_to_display as $genre_item): 
-              ?>
-              <a><?php echo htmlspecialchars($genre_item->name) ?></a>
-              <?php endforeach; ?>
-          </div>
+                    if (!empty($genres)) {
+                        $gcount = count($genres);
+                        $genre_counter = 0;
+                        
+                        foreach($genres as $g) {
+                            $stmt6 = $db->prepare("SELECT name FROM genre WHERE id = :genre_id");
+                            $stmt6->execute([':genre_id' => $g['genre_id']]);
+                            $p = $stmt6->fetch();
+                            
+                            if ($p) {
+                                ?>
+                                <a><?php echo htmlspecialchars($p['name']); ?></a>
+                                <?php
+                                $genre_counter++;
+                                
+                                // Add separator if not last item
+                                if ($genre_counter < $gcount) {
+                                    echo ", ";
+                                }
+                            }
+                        }
+                    } else {
+                        echo "No genres found";
+                    }
+                }
+
+                // Display genres from API (for movies/TV shows)
+                if (!empty($genres_to_display)) {
+                    foreach ($genres_to_display as $genre_item): ?>
+                        <a><?php echo htmlspecialchars($genre_item->name); ?></a>
+                    <?php endforeach;
+                }
+                ?>
+            </div>
 
               <div class="date-time">
 
                 <div>
                   <ion-icon name="calendar-outline"></ion-icon>
-                  <time datetime="<?php echo htmlspecialchars(substr($movie_id->release_date ?? $tv_id->first_air_date, 0, 4 )); ?>"><?php echo htmlspecialchars(substr($movie_id->release_date ?? $tv_id->first_air_date, 0, 4 ));?></time>
+                    <time datetime="<?php 
+                        $date = $movie_id->release_date ?? $tv_id->first_air_date ?? $custom_movie['release_date'] ?? '';
+                        echo htmlspecialchars(substr($date, 0, 4));
+                    ?>">
+                        <?php 
+                        echo htmlspecialchars(substr($date, 0, 4));
+                        ?>
+                    </time>
                 </div>
 
 
@@ -126,9 +170,9 @@ if ($type === 'tv') {
             </div>
 
             <p class="storyline"><strong>Overview</strong><br>
-              <?php echo htmlspecialchars($movie_id->overview ?? $tv_id->overview); ?>
-              <br>
-              <em><?php echo htmlspecialchars($movie_id->tagline ?? $tv_id->tagline ?? "")?></em>
+              <?php echo htmlspecialchars($movie_id->overview ?? $tv_id->overview ?? $custom_movie['overview']); ?>
+              <br><br>
+              <em><?php echo htmlspecialchars($movie_id->tagline ?? $tv_id->tagline ?? $custom_movie['tagline'] ?? "")?></em>
               
             <?php if ($type === 'tv') { ?>
               <br><br>
@@ -141,11 +185,15 @@ if ($type === 'tv') {
             <div class="details-actions">
 
               <div class="title-wrapper">
-                <p class="title">IMDb Rating: <?php echo number_format($movie_id->vote_average ?? $tv_id->vote_average, 1); ?>/10</p>
+                <?php
+                $rating = $movie_id->vote_average ?? $tv_id->vote_average ?? $custom_movie['vote_average'] ?? 0;
+
+                ?>
+                <p class="title">IMDb Rating: <?php echo number_format($rating, 1); ?>/10</p>
                 <p class="text">
                 Revenue :
                 <?php
-                  $revenue = $movie_id->revenue ?? null;
+                  $revenue = $movie_id->revenue ?? $custom_movie['revenue'] ?? null;
                   if ($revenue && $revenue > 0) {
                     echo '$' . number_format($revenue, 0, '.', ',');
                   } else {
@@ -163,7 +211,7 @@ if ($type === 'tv') {
 
             </div>
 
-            <a href="<?php echo htmlspecialchars($movie_id->homepage ?? $tv_id->homepage); ?>" download class="download-btn">
+            <a href="<?php echo htmlspecialchars($movie_id->homepage ?? $tv_id->homepage ?? $custom_movie['homepage']); ?>" download class="download-btn">
               <span>Official Website</span>
               <ion-icon name="download-outline"></ion-icon>
             </a>
@@ -180,7 +228,7 @@ if ($type === 'tv') {
 <section class="text-gray-600 body-font">
   <div class="container px-5 py-24 mx-auto">
     <div class="flex w-full mb-20 flex-wrap" style="margin-bottom: 20px;">
-      <h1 class=" h1 section-subtitle">Watch the latest trailers for <strong> <?php echo htmlspecialchars($movie_id->title ?? $tv_id->name)?></strong>. Browse through our collection of official videos, teasers, and behind-the-scenes content.</h1>
+      <h1 class=" h1 section-subtitle">Watch the latest trailers for <strong> <?php echo htmlspecialchars($movie_id->title ?? $tv_id->name ?? $custom_movie['title'])?></strong>. Browse through our collection of official videos, teasers, and behind-the-scenes content.</h1>
     </div>
     
     <div class="flex flex-wrap md:-m-2 -m-1">

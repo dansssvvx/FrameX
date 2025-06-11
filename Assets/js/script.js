@@ -55,3 +55,65 @@ window.addEventListener("scroll", function () {
 document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("addMovieBtn").addEventListener("click", toggleModal);
 });
+
+async function editModal(id) {
+    const modal = document.getElementById('editModal');
+    modal.classList.toggle('hidden');
+
+    try {
+        // Fetch data movie dari server
+        const response = await fetch(`get_movie.php?id=${id}`);
+        const movie = await response.json();
+
+        // Isi form dengan data movie
+        document.getElementById('editMovieId').value = movie.id;
+        document.querySelector('#editModal input[name="title"]').value = movie.title;
+        document.querySelector('#editModal input[name="tagline"]').value = movie.tagline;
+        document.querySelector('#editModal input[name="release_date"]').value = movie.release_date;
+        document.querySelector('#editModal select[name="status"]').value = movie.status;
+        document.querySelector('#editModal input[name="revenue"]').value = movie.revenue;
+        document.querySelector('#editModal input[name="homepage"]').value = movie.homepage;
+        document.querySelector('#editModal input[name="poster"]').value = movie.poster_path;
+        document.querySelector('#editModal textarea[name="overview"]').value = movie.overview;
+
+        // Centang genre yang sesuai
+        const genreCheckboxes = document.querySelectorAll('#editModal input[name="genres[]"]');
+        genreCheckboxes.forEach(checkbox => {
+            checkbox.checked = movie.genres.includes(parseInt(checkbox.value));
+        });
+    } catch (error) {
+        console.error("Error fetching movie data:", error);
+        alert("Gagal memuat data movie.");
+    }
+}
+
+async function editModal(id) {
+    const modal = document.getElementById('editModal');
+    modal.classList.toggle('hidden');
+
+    try {
+        // Fetch data movie dari server
+        const response = await fetch(`get_movie.php?id=${id}`);
+        const movie = await response.json();
+
+        // Isi form dengan data movie
+        document.getElementById('editMovieId').value = movie.id;
+        document.querySelector('#editModal input[name="title"]').value = movie.title;
+        document.querySelector('#editModal input[name="tagline"]').value = movie.tagline;
+        document.querySelector('#editModal input[name="release_date"]').value = movie.release_date;
+        document.querySelector('#editModal select[name="status"]').value = movie.status;
+        document.querySelector('#editModal input[name="revenue"]').value = movie.revenue;
+        document.querySelector('#editModal input[name="homepage"]').value = movie.homepage;
+        document.querySelector('#editModal input[name="poster"]').value = movie.poster_path;
+        document.querySelector('#editModal textarea[name="overview"]').value = movie.overview;
+
+        // Centang genre yang sesuai
+        const genreCheckboxes = document.querySelectorAll('#editModal input[name="genres[]"]');
+        genreCheckboxes.forEach(checkbox => {
+            checkbox.checked = movie.genres.includes(parseInt(checkbox.value));
+        });
+    } catch (error) {
+        console.error("Error fetching movie data:", error);
+        alert("Gagal memuat data movie.");
+    }
+}

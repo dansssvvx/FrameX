@@ -131,7 +131,7 @@ include_once '../API/api_now.php';
                     </a>
 
                     <div class="title-wrapper">
-                        <a href="./details.php?id=<?= $p->id?>&type=movie?>">
+                        <a href="./details.php?id=<?= $p->id?>&type=movie">
                             <h3 class="card-title"><?= htmlspecialchars($p->title) ?></h3>
                         </a>
                       <time datetime="<?= htmlspecialchars(substr($p->release_date, 0, 4)) ?>">
@@ -174,14 +174,14 @@ include_once '../API/api_now.php';
            <?php foreach ($toprated->results as $p): ?>
             <li data-category="<?= htmlspecialchars($p-> genre_ids[0]) ?>">
                 <div class="movie-card">
-                    <a href="./details.php?id=<?= $p->id ?>&type=movie?>">
+                    <a href="./details.php?id=<?= $p->id ?>&type=movie">
                         <figure class="card-banner">
                             <img src="https://image.tmdb.org/t/p/w500<?= $p->poster_path?>" alt="<?= htmlspecialchars($p->title) ?> movie poster">
                         </figure>
                     </a>
 
                     <div class="title-wrapper">
-                        <a href="./details.php?id=<?= $p->id?>&type=movie?>">
+                        <a href="./details.php?id=<?= $p->id?>&type=movie">
                             <h3 class="card-title"><?= htmlspecialchars($p->title) ?></h3>
                         </a>
                       <time datetime="<?= htmlspecialchars(substr($p->release_date, 0, 4)) ?>">
@@ -206,55 +206,6 @@ include_once '../API/api_now.php';
     </div>
 </section>
 
-
-      <!-- <section class="top-rated">
-    <div class="container">
-      <p class="section-subtitle">Fan Favorite Movie</p>
-        <h2 class="h2 section-title">Top Rated Movies</h2>
-
-        <ul class="movies-list has-scrollbar" id="top-rated-movies">
-
-            <?php foreach ($top_rated_movies as $movie): ?>
-            <li data-category="<?= htmlspecialchars($movie['category']) ?>">
-                <div class="movie-card">
-                    <a href="./movie-details.php?id=<?= $movie['id'] ?>">
-                        <figure class="card-banner">
-                            <img src="<?= htmlspecialchars($movie['poster_url']) ?>" alt="<?= htmlspecialchars($movie['title']) ?> movie poster">
-                        </figure>
-                    </a>
-
-                    <div class="title-wrapper">
-                        <a href="./movie-details.php?id=<?= $movie['id'] ?>">
-                            <h3 class="card-title"><?= htmlspecialchars($movie['title']) ?></h3>
-                        </a>
-                        <time datetime="<?= $movie['year'] ?>"><?= $movie['year'] ?></time>
-                    </div>
-
-                    <div class="card-meta">
-                        <div class="badge badge-outline"><?= htmlspecialchars($movie['quality']) ?></div>
-                        <div class="duration">
-                            <ion-icon name="time-outline"></ion-icon>
-                            <time datetime="PT<?= $movie['duration'] ?>M"><?= $movie['duration'] ?> min</time>
-                        </div>
-                        <div class="rating">
-                            <ion-icon name="star"></ion-icon>
-                            <data><?= number_format($movie['rating'], 1) ?></data>
-                        </div>
-                    </div>
-                </div>
-            </li>
-            <?php endforeach; ?>
-        </ul>
-    </div>
-</section> -->
-
-
-
-
-      <!-- 
-        - #Popular
-      -->
-
   <section class="upcoming" style="background-image: url('../Assets/images/top-rated-bg.jpg');">
    <div class="container">
 
@@ -270,14 +221,14 @@ include_once '../API/api_now.php';
            <?php foreach ($popular->results as $p): ?>
             <li data-category="<?= htmlspecialchars($p-> genre_ids[0]) ?>">
                 <div class="movie-card">
-                    <a href="./details.php?id=<?= $p->id ?>&type=movie?>">
+                    <a href="./details.php?id=<?= $p->id ?>&type=movie">
                         <figure class="card-banner">
                             <img src="https://image.tmdb.org/t/p/w500<?= $p->poster_path?>" alt="<?= htmlspecialchars($p->title) ?> movie poster">
                         </figure>
                     </a>
 
                     <div class="title-wrapper">
-                        <a href="./details.php?id=<?= $p->id?>&type=movie?>">
+                        <a href="./details.php?id=<?= $p->id?>&type=movie">
                             <h3 class="card-title"><?= htmlspecialchars($p->title) ?></h3>
                         </a>
                       <time datetime="<?= htmlspecialchars(substr($p->release_date, 0, 4)) ?>">
@@ -300,9 +251,7 @@ include_once '../API/api_now.php';
         </ul>
 
     </div>
-      </section>
-
-<!-- Now Playing -->
+  </section>
 
   <section class="upcoming" style="background-image: url('../Assets/images/tv-series-bg.jpg');">
    <div class="container">
@@ -319,14 +268,14 @@ include_once '../API/api_now.php';
            <?php foreach ($nowplaying->results as $p): ?>
             <li data-category="<?= htmlspecialchars($p-> genre_ids[0]) ?>">
                 <div class="movie-card">
-                    <a href="./details.php?id=<?= $p->id ?>&type=movie?>">
+                    <a href="./details.php?id=<?= $p->id ?>&type=movie">
                         <figure class="card-banner">
                             <img src="https://image.tmdb.org/t/p/w500<?= $p->poster_path?>" alt="<?= htmlspecialchars($p->title) ?> movie poster">
                         </figure>
                     </a>
 
                     <div class="title-wrapper">
-                        <a href="./details.php?id=<?= $p->id?>&type=movie?>">
+                        <a href="./details.php?id=<?= $p->id?>&type=movie">
                             <h3 class="card-title"><?= htmlspecialchars($p->title) ?></h3>
                         </a>
                       <time datetime="<?= htmlspecialchars(substr($p->release_date, 0, 4)) ?>">
