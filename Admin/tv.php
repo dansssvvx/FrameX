@@ -238,7 +238,7 @@ $nodata = "Belum ada data tersedia! Silahkan tambah terlebih dahulu.";
             <td class="px-6 py-4 text-white"><a href="<?php echo $m['poster_path']?>"><?php echo $m['poster_path']  ?></a></td>
             <td class="px-6 py-4 text-white"><?php echo $m['created_at']  ?></td>
             <td class="flex items-center px-6 py-4">
-                <button onclick="editModal(<?php echo $m['id']?>)"> <a href="#" class="font-medium text-citrine dark:text-citrine hover:underline">Edit</a></button>
+                <button onclick="editTvShowModal(<?php echo $m['id']?>)"> <a href="#" class="font-medium text-citrine dark:text-citrine hover:underline">Edit</a></button>
                 <a href="delete_movie.php" class="font-medium text-red-600 dark:text-red-500 hover:underline ms-3">Remove</a>
             </td>
 
@@ -267,7 +267,7 @@ $nodata = "Belum ada data tersedia! Silahkan tambah terlebih dahulu.";
     + Add Custom TV Show
   </button>
 
-<div id="tvshowmodal" class="fixed inset-0 z-50 hidden bg-black/30 backdrop-blur-sm flex items-center justify-center p-4">
+<div id="editTvShowModal" class="fixed inset-0 z-50 hidden bg-black/30 backdrop-blur-sm flex items-center justify-center p-4">
     <section class="bg-white dark:bg-gray-900 rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto">
         <div class="py-8 px-8 mx-auto bg-eerie-black">
             <h2 class="mb-6 text-2xl font-bold text-gray-900 dark:text-white">Add a New TV Show</h2>

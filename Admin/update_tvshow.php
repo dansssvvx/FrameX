@@ -11,61 +11,66 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     die("Invalid request method");
 }
 
+// Get form data
 $id = $_POST['id'];
 $title = $_POST['title'];
 $overview = $_POST['overview'];
 $tagline = $_POST['tagline'];
-$release_date = $_POST['release_date'];
+$first_air_date = $_POST['first_air_date']; // Correct field name for TV show
 $status = $_POST['status'];
-$revenue = $_POST['revenue'];
+$total_episodes = $_POST['total_episodes']; // Correct field name for TV show
+$total_seasons = $_POST['total_seasons']; // Correct field name for TV show
 $homepage = $_POST['homepage'];
 $poster_path = $_POST['poster'];
 $genres = $_POST['genres'] ?? [];
 
 try {
     $db->beginTransaction();
-    
-    $stmt = $db->prepare("UPDATE custom_movie SET 
-        title = ?, 
-        overview = ?, 
-        tagline = ?, 
-        release_date = ?, 
-        status = ?, 
-        revenue = ?, 
-        homepage = ?, 
-        poster_path = ? 
+
+    $stmt = $db->prepare("UPDATE custom_tv_show SET
+        title = ?,
+        overview = ?,
+        tagline = ?,
+        first_air_date = ?,
+        status = ?,
+        total_episodes = ?,
+        total_seasons = ?,
+        homepage = ?,
+        poster_path = ?
         WHERE id = ?");
-    
+
     $stmt->execute([
         $title,
         $overview,
         $tagline,
-        $release_date,
+        $first_air_date,
         $status,
-        $revenue,
+        $total_episodes,
+        $total_seasons,
         $homepage,
         $poster_path,
         $id
     ]);
-    
-    $db->prepare("DELETE FROM movie_genre WHERE movie_id = ?")->execute([$id]);
-    
-    $stmt = $db->prepare("INSERT INTO movie_genre (movie_id, genre_id) VALUES (?, ?)");
+
+    // Update genres
+    $db->prepare("DELETE FROM tvshow_genre WHERE tvshow_id = ?")->execute([$id]);
+
+    $stmt = $db->prepare("INSERT INTO tvshow_genre (tvshow_id, genre_id) VALUES (?, ?)");
     foreach ($genres as $genreId) {
         $stmt->execute([$id, $genreId]);
     }
-    
-    $db->commit();
 
+    $db->commit();
     $log_message = $_SESSION['username'] . " (admin) Mengupdate TV Show dengan ID " . $id . ": " . $title;
     $log_stmt = $db->prepare("INSERT INTO log (isi_log, tanggal_log, id_user) VALUES (?, NOW(), ?)");
     $log_stmt->execute([$log_message, $_SESSION['user_id']]);
 
-    $_SESSION['success'] = "Movie updated successfully!";
+    $_SESSION['success'] = "TV Show updated successfully!";
 } catch (PDOException $e) {
     $db->rollBack();
-    $_SESSION['error'] = "Error updating movie: " . $e->getMessage();
+    $_SESSION['error'] = "Error updating TV Show: " . $e->getMessage();
 }
 
-header("Location: movie.php");
+header("Location: tv.php");
 exit;
+?>
