@@ -11,7 +11,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     die("Invalid request method");
 }
 
-// Get form data
 $id = $_POST['id'];
 $title = $_POST['title'];
 $overview = $_POST['overview'];
@@ -49,7 +48,6 @@ try {
         $id
     ]);
     
-    // Update genres
     $db->prepare("DELETE FROM movie_genre WHERE movie_id = ?")->execute([$id]);
     
     $stmt = $db->prepare("INSERT INTO movie_genre (movie_id, genre_id) VALUES (?, ?)");
