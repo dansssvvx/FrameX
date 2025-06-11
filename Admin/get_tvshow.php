@@ -14,11 +14,11 @@ $stmt = $db->prepare("SELECT * FROM custom_tv_show WHERE id = ?");
 $stmt->execute([$id]);
 $tvshow = $stmt->fetch(PDO::FETCH_ASSOC);
 
-if (!$motvshowvie) {
-    die(json_encode(['error' => 'Movie tidak ditemukan']));
+if (!$tvshow) {
+    die(json_encode(['error' => 'TV Show tidak ditemukan']));
 }
 
-$stmt = $db->prepare("SELECT genre_id FROM tvshow_genre WHERE tvshow_id = ?");
+$stmt = $db->prepare(query: "SELECT genre_id FROM tvshow_genre WHERE tvshow_id = ?");
 $stmt->execute([$id]);
 $genres = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
 
