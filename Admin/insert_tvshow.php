@@ -76,6 +76,10 @@ try {
     }
     
     $db->commit();
+
+    $log_message = $_SESSION['username'] . " (admin) menambahkan TV Show baru: " . $title;
+    $log_stmt = $db->prepare("INSERT INTO log (isi_log, tanggal_log, id_user) VALUES (?, NOW(), ?)");
+    $log_stmt->execute([$log_message, $_SESSION['user_id']]);
     
     $_SESSION['success'] = "TV Show berhasil ditambahkan!";
     header("Location: tv.php");

@@ -26,6 +26,13 @@ try {
     // Update role
     $stmt = $db->prepare("UPDATE users SET is_admin = ? WHERE id = ?");
     $stmt->execute([$new_role, $user_id]);
+
+    $stmt_username = $db->prepare("SELECT username FROM users WHERE id = ?");
+    $stmt_username->execute([$user_id]);
+    $target_username = $stmt_username->fetchColumn();
+    $log_message = $_SESSION['username'] . " (admin) Mengganti role " . $target_username . " menjadi " . ($new_role ? "Admin" : "User");
+    $log_stmt = $db->prepare("INSERT INTO log (isi_log, tanggal_log, id_user) VALUES (?, NOW(), ?)");
+    $log_stmt->execute([$log_message, $_SESSION['user_id']]);
     
     $_SESSION['success'] = "Role berhasil diubah!";
 } catch (PDOException $e) {

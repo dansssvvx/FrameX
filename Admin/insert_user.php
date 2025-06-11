@@ -64,6 +64,10 @@ try {
     // Commit transaksi jika semua operasi berhasil
     $db->commit();
 
+    $log_message = $_SESSION['username'] . " (admin) menambahkan user baru: " . $username . " dengan role: " . ($is_admin ? "Admin" : "User");
+    $log_stmt = $db->prepare("INSERT INTO log (isi_log, tanggal_log, id_user) VALUES (?, NOW(), ?)");
+    $log_stmt->execute([$log_message, $_SESSION['user_id']]);
+
     $_SESSION['success'] = "User berhasil ditambahkan!";
     header("Location: user.php");
     exit;

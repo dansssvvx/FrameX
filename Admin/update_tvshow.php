@@ -58,6 +58,11 @@ try {
     }
     
     $db->commit();
+
+    $log_message = $_SESSION['username'] . " (admin) Mengupdate TV Show dengan ID " . $id . ": " . $title;
+    $log_stmt = $db->prepare("INSERT INTO log (isi_log, tanggal_log, id_user) VALUES (?, NOW(), ?)");
+    $log_stmt->execute([$log_message, $_SESSION['user_id']]);
+
     $_SESSION['success'] = "Movie updated successfully!";
 } catch (PDOException $e) {
     $db->rollBack();
