@@ -41,11 +41,15 @@ if (strlen($password) < 8) {
 }
 
 try {
+    // Mulai transaksi
+    $db->beginTransaction();
+
     // Cek apakah username atau email sudah terdaftar
     $stmt = $db->prepare("SELECT COUNT(*) FROM users WHERE username = ? OR email = ?");
     $stmt->execute([$username, $email]);
     if ($stmt->fetchColumn() > 0) {
         $_SESSION['error'] = "Username atau email sudah terdaftar.";
+        $db->rollBack(); // Batalkan transaksi jika user sudah ada
         header("Location: user.php");
         exit;
     }
@@ -57,11 +61,16 @@ try {
     $stmt = $db->prepare("INSERT INTO users (username, email, password, is_admin, created_at) VALUES (?, ?, ?, ?, NOW())");
     $stmt->execute([$username, $email, $hashed_password, $is_admin]);
 
+    // Commit transaksi jika semua operasi berhasil
+    $db->commit();
+
     $_SESSION['success'] = "User berhasil ditambahkan!";
     header("Location: user.php");
     exit;
 
 } catch (PDOException $e) {
+    // Rollback transaksi jika terjadi error
+    $db->rollBack();
     $_SESSION['error'] = "Error: " . $e->getMessage();
     header("Location: user.php");
     exit;
