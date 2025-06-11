@@ -136,5 +136,18 @@ function closeAddUserModal() {
 }
 
 function closeEditModal() {
-    document.getElementById('editTvShowModal').classList.add('hidden'); // Change ID here
+    document.getElementById('editTvShowModal').classList.add('hidden');
+}
+
+function toggleModal() {
+    const modal = document.getElementById('tvshowmodal');
+    modal.classList.toggle('hidden');
+}
+
+function closeModal() {
+    document.getElementById('tvshowmodal').classList.add('hidden');
+}
+
+function closeEditModal() {
+    document.getElementById('editModal').classList.add('hidden');
 }

@@ -267,7 +267,7 @@ $nodata = "Belum ada data tersedia! Silahkan tambah terlebih dahulu.";
     + Add Custom TV Show
   </button>
 
-<div id="editTvShowModal" class="fixed inset-0 z-50 hidden bg-black/30 backdrop-blur-sm flex items-center justify-center p-4">
+<div id="tvshowmodal" class="fixed inset-0 z-50 hidden bg-black/30 backdrop-blur-sm flex items-center justify-center p-4">
     <section class="bg-white dark:bg-gray-900 rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto">
         <div class="py-8 px-8 mx-auto bg-eerie-black">
             <h2 class="mb-6 text-2xl font-bold text-gray-900 dark:text-white">Add a New TV Show</h2>
@@ -385,15 +385,14 @@ $nodata = "Belum ada data tersedia! Silahkan tambah terlebih dahulu.";
 <div id="editModal" class="fixed inset-0 z-50 hidden bg-black/30 backdrop-blur-sm flex items-center justify-center p-4">
     <section class="bg-white dark:bg-gray-900 rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto">
         <div class="py-8 px-8 mx-auto bg-eerie-black">
-            <h2 class="mb-6 text-2xl font-bold text-gray-900 dark:text-white">Edit Movie</h2>
-            <form action="update_movie.php" method="POST">
+            <h2 class="mb-6 text-2xl font-bold text-gray-900 dark:text-white">Edit TV Show</h2>
+            <form action="insert_tvshow.php" method="POST">
                 <div class="grid gap-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Left Column -->
                         <div class="space-y-6">
                             <div>
-                                <input type="hidden" name="id" id="editMovieId"value="">
-                                <label for="title" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Movie Title</label>
+                                <label for="title" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">TV Show Title</label>
                                 <input type="text" name="title" id="title" required placeholder="Enter movie title" 
                                     class="w-full p-3 border border-gray-300 rounded-lg dark:bg-app-white dark:border-gray-600">
                             </div>
@@ -405,8 +404,8 @@ $nodata = "Belum ada data tersedia! Silahkan tambah terlebih dahulu.";
                             </div>
                             
                             <div>
-                                <label for="release_date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Release Date</label>
-                                <input type="date" name="release_date" id="release_date" required 
+                                <label for="first_air_date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First Air Date</label>
+                                <input type="date" name="first_air_date" id="first_air_date" required 
                                     class="w-full p-3 border border-gray-300 rounded-lg dark:bg-app-white dark:border-gray-600">
                             </div>
                         </div>
@@ -414,27 +413,35 @@ $nodata = "Belum ada data tersedia! Silahkan tambah terlebih dahulu.";
                         <!-- Right Column -->
                         <div class="space-y-6">
                             <div class="grid grid-cols-2 gap-4">
-                                <!-- Status Dropdown -->
-                                <div>
-                                    <label for="status" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Status</label>
-                                    <select name="status" id="status" required 
-                                        class="w-full p-3 border border-gray-300 rounded-lg dark:bg-app-white dark:border-gray-600 ">
-                                        <option value="">Select status</option>
-                                        <option value="Released">Released</option>
-                                        <option value="Post Production">Post Production</option>
-                                        <option value="Rumored">Rumored</option>
-                                        <option value="In Production">In Production</option>
-                                        <option value="Canceled">Canceled</option>
-                                        <option value="Planned">Planned</option>
-                                    </select>
-                                </div>
-
+                                
                                 <!-- Revenue -->
                                 <div>
-                                    <label for="revenue" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Revenue ($)</label>
-                                    <input type="number" name="revenue" id="revenue" placeholder="e.g. 1500000" 
-                                        class="w-full p-3 border border-gray-300 rounded-lg dark:bg-app-white dark:border-gray-600">
+                                    <label for="total_episodes" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Total Episodes</label>
+                                    <input type="number" name="total_episodes" id="total_episodes" placeholder="e.g. 5" 
+                                    class="w-full p-3 border border-gray-300 rounded-lg dark:bg-app-white dark:border-gray-600">
                                 </div>
+                                
+                                <div>
+                                    <label for="total_seasons" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Total Seasons</label>
+                                    <input type="number" name="total_seasons" id="total_seasons" placeholder="e.g. 1" 
+                                    class="w-full p-3 border border-gray-300 rounded-lg dark:bg-app-white dark:border-gray-600">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="status" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Status</label>
+                                <select name="status" id="status" required 
+                                    class="w-full p-3 border border-gray-300 rounded-lg dark:bg-app-white dark:border-gray-600 ">
+                                    <option value="">Select status</option>
+                                    <option value="Returning Series">Returning Series</option>
+                                    <option value="Ended">Ended</option>
+                                    <option value="Rumored">Rumored</option>
+                                    <option value="In Production">In Production</option>
+                                    <option value="Canceled">Canceled</option>
+                                    <option value="Planned">Planned</option>
+                                </select>
+                            </div>
+
                             </div>
 
                             <div>
@@ -475,13 +482,13 @@ $nodata = "Belum ada data tersedia! Silahkan tambah terlebih dahulu.";
                     <!-- Button Container -->
                     <div class="flex justify-between mt-6">
                         <!-- Cancel Button (Left) -->
-                        <button type="button" onclick="closeEditModal()" class="px-6 py-3 text-sm font-medium text-black bg-gray-300 rounded-lg hover:bg-gray-400 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-600">
+                        <button type="button" onclick="closeModal()" class="px-6 py-3 text-sm font-medium text-black bg-gray-300 rounded-lg hover:bg-gray-400 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-600">
                             Cancel
                         </button>
                         
                         <!-- Submit Button (Right) -->
                         <button type="submit" class="px-6 py-3 text-sm font-medium text-black bg-citrine rounded-lg hover:bg-citrine-hover focus:ring-4 focus:ring-citrine">
-                            + Update Movie
+                            + Update TV Show
                         </button>
                     </div>
                 </div>
@@ -505,19 +512,3 @@ $nodata = "Belum ada data tersedia! Silahkan tambah terlebih dahulu.";
     @apply w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600 text-gray-900 dark:text-white;
   }
 </style>
-
-<!-- Toggle Script -->
-<script>
-function toggleModal() {
-    const modal = document.getElementById('tvshowmodal');
-    modal.classList.toggle('hidden');
-}
-
-function closeModal() {
-    document.getElementById('tvshowmodal').classList.add('hidden');
-}
-
-function closeEditModal() {
-    document.getElementById('editModal').classList.add('hidden');
-}
-</script>
