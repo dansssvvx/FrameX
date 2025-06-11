@@ -382,11 +382,11 @@ $nodata = "Belum ada data tersedia! Silahkan tambah terlebih dahulu.";
     </section>
 </div>
 
-<div id="editModal" class="fixed inset-0 z-50 hidden bg-black/30 backdrop-blur-sm flex items-center justify-center p-4">
+<div id="editTvShowModal" class="fixed inset-0 z-50 hidden bg-black/30 backdrop-blur-sm flex items-center justify-center p-4">
     <section class="bg-white dark:bg-gray-900 rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto">
         <div class="py-8 px-8 mx-auto bg-eerie-black">
             <h2 class="mb-6 text-2xl font-bold text-gray-900 dark:text-white">Edit TV Show</h2>
-            <form action="insert_tvshow.php" method="POST">
+            <form action="update_tvshow.php" method="POST">
                 <div class="grid gap-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Left Column -->
@@ -482,7 +482,7 @@ $nodata = "Belum ada data tersedia! Silahkan tambah terlebih dahulu.";
                     <!-- Button Container -->
                     <div class="flex justify-between mt-6">
                         <!-- Cancel Button (Left) -->
-                        <button type="button" onclick="closeModal()" class="px-6 py-3 text-sm font-medium text-black bg-gray-300 rounded-lg hover:bg-gray-400 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-600">
+                        <button type="button" onclick="closeEditModal()" class="px-6 py-3 text-sm font-medium text-black bg-gray-300 rounded-lg hover:bg-gray-400 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-600">
                             Cancel
                         </button>
                         
