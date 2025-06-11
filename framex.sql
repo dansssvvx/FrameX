@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 11 Jun 2025 pada 09.54
+-- Waktu pembuatan: 11 Jun 2025 pada 13.11
 -- Versi server: 10.1.38-MariaDB
 -- Versi PHP: 7.3.3
 
@@ -69,6 +69,13 @@ CREATE TABLE `custom_tv_show` (
   `poster_path` varchar(255) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data untuk tabel `custom_tv_show`
+--
+
+INSERT INTO `custom_tv_show` (`id`, `title`, `overview`, `tagline`, `first_air_date`, `total_episodes`, `total_seasons`, `status`, `homepage`, `poster_path`, `created_at`) VALUES
+(1, 'Kesultanan Bogor B -Series', 'Sekuel dari FILM Kesultanan Bogor B', 'mok, mok, mok, moooook.  Seperti biasa', '2025-06-11', 9, 1, 'Returning Series', 'https://whatsapp.com', 'https://picsum.photos/2000/3000?random=192', '2025-06-11 08:48:27');
 
 -- --------------------------------------------------------
 
@@ -187,7 +194,11 @@ INSERT INTO `log` (`id_log`, `isi_log`, `tanggal_log`, `id_user`) VALUES
 (32, 'rama (admin) berhasil logout', '2025-06-11 14:15:19', 2),
 (33, 'user (user) berhasil login', '2025-06-11 14:15:29', 1),
 (34, 'user (user) berhasil logout', '2025-06-11 15:23:32', 1),
-(35, 'rama (admin) berhasil login', '2025-06-11 15:23:42', 2);
+(35, 'rama (admin) berhasil login', '2025-06-11 15:23:42', 2),
+(36, 'rama (admin) berhasil logout', '2025-06-11 17:09:55', 2),
+(37, 'user (user) berhasil login', '2025-06-11 17:10:02', 1),
+(38, 'user (user) berhasil logout', '2025-06-11 17:32:46', 1),
+(39, 'rama (admin) berhasil login', '2025-06-11 17:32:56', 2);
 
 -- --------------------------------------------------------
 
@@ -214,6 +225,25 @@ INSERT INTO `movie_genre` (`movie_id`, `genre_id`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Struktur dari tabel `tvshow_genre`
+--
+
+CREATE TABLE `tvshow_genre` (
+  `tvshow_id` int(11) NOT NULL,
+  `genre_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data untuk tabel `tvshow_genre`
+--
+
+INSERT INTO `tvshow_genre` (`tvshow_id`, `genre_id`) VALUES
+(1, 10463),
+(1, 10759);
+
+-- --------------------------------------------------------
+
+--
 -- Struktur dari tabel `users`
 --
 
@@ -233,8 +263,7 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`id`, `username`, `email`, `password`, `is_admin`, `created_at`) VALUES
 (1, 'user', 'user@gmail.com', '$2y$10$8Q4RfwmtBr2JztIpsnGW8eE2px.bLFtfK5XzcgDGM29rZcRQvd2wm', 0, '2025-06-08 23:04:29'),
 (2, 'rama', 'f1d02310102@gmail.com', '$2y$10$NdwmFrcNgt75MRnFrw.xz.1t73inJfrGKJZxTM8W44HnU4T2MEkSi', 1, '2025-06-09 02:03:39'),
-(3, 'ucii', 'sucitsrirhmdni.10@gmail.com', '$2y$10$HYGmi.kDSBw9IJMHZ5opNOCtYgc9ostO23180LPA8OU44M6VloC8S', 1, '2025-06-10 14:02:14'),
-(7, 'user1', 'user1@gmail.com', '$2y$10$8Q4RfwmtBr2JztIpsnGW8eE2px.bLFtfK5XzcgDGM29rZcRQvd2wm', 0, '2025-06-08 23:04:29');
+(3, 'ucii', 'sucitsrirhmdni.10@gmail.com', '$2y$10$HYGmi.kDSBw9IJMHZ5opNOCtYgc9ostO23180LPA8OU44M6VloC8S', 1, '2025-06-10 14:02:14');
 
 --
 -- Indexes for dumped tables
@@ -274,6 +303,13 @@ ALTER TABLE `movie_genre`
   ADD KEY `genre_id` (`genre_id`);
 
 --
+-- Indeks untuk tabel `tvshow_genre`
+--
+ALTER TABLE `tvshow_genre`
+  ADD PRIMARY KEY (`tvshow_id`,`genre_id`),
+  ADD KEY `tvshow_genre_ibfk_2` (`genre_id`);
+
+--
 -- Indeks untuk tabel `users`
 --
 ALTER TABLE `users`
@@ -293,13 +329,13 @@ ALTER TABLE `custom_movie`
 -- AUTO_INCREMENT untuk tabel `custom_tv_show`
 --
 ALTER TABLE `custom_tv_show`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT untuk tabel `log`
 --
 ALTER TABLE `log`
-  MODIFY `id_log` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `id_log` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT untuk tabel `users`
@@ -323,6 +359,13 @@ ALTER TABLE `log`
 ALTER TABLE `movie_genre`
   ADD CONSTRAINT `movie_genre_ibfk_1` FOREIGN KEY (`movie_id`) REFERENCES `custom_movie` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `movie_genre_ibfk_2` FOREIGN KEY (`genre_id`) REFERENCES `genre` (`id`) ON DELETE CASCADE;
+
+--
+-- Ketidakleluasaan untuk tabel `tvshow_genre`
+--
+ALTER TABLE `tvshow_genre`
+  ADD CONSTRAINT `tvshow_genre_ibfk_1` FOREIGN KEY (`tvshow_id`) REFERENCES `custom_tv_show` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `tvshow_genre_ibfk_2` FOREIGN KEY (`genre_id`) REFERENCES `genre` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

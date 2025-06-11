@@ -167,10 +167,10 @@ $nodata = "Belum ada data tersedia! Silahkan tambah terlebih dahulu.";
 
 <div class="title-wrapper" style="padding-bottom:20px;">
     <p class="section-subtitle" style="margin-bottom:0px; text-align: left;">
-    Explore your custom tv show data
+        You can manage TV Show here, including adding, editing, and deleting TV Shows.
     </p>
     <h2 class="h2 section-title" style="text-align:left;">
-    <strong>TV Show Collection</strong>
+    <strong>Custom TV Show</strong>
     </h2>
 </div>
 

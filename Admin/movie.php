@@ -131,11 +131,11 @@ $nodata = "Belum ada data tersedia! Silahkan tambah terlebih dahulu.";
            </button>
            <ul id="dropdown-example" class="hidden py-2 space-y-2">
                      <li>
-                       <a href="#" class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group dark:bg-gunmetal-2 hover:bg-gray-100 dark:text-app-white dark:hover:bg-gunmetal-2">Movie</a> </li>
+                       <a href="./movie.php" class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group dark:bg-gunmetal-2 hover:bg-gray-100 dark:text-app-white dark:hover:bg-gunmetal-2">Movie</a> </li>
                      <li>
-                       <a href="#" class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-app-white dark:hover:bg-gunmetal-2">TV Show</a> </li>
+                       <a href="./tv.php" class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-app-white dark:hover:bg-gunmetal-2">TV Show</a> </li>
                      <li>
-                       <a href="#" class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-app-white dark:hover:bg-gunmetal-2">User</a> </li>
+                       <a href="./user.php" class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-app-white dark:hover:bg-gunmetal-2">User</a> </li>
            </ul>
          </li>
          <li>
@@ -170,10 +170,10 @@ $nodata = "Belum ada data tersedia! Silahkan tambah terlebih dahulu.";
 
 <div class="title-wrapper" style="padding-bottom:20px;">
     <p class="section-subtitle" style="margin-bottom:0px; text-align: left;">
-    Explore your custom movie data
+    Explore and manage Custom Movies including adding, editing, and deleting movies.
     </p>
     <h2 class="h2 section-title" style="text-align:left;">
-    <strong>Movie Collection</strong>
+    <strong>Custom Movie Collection</strong>
     </h2>
 </div>
 

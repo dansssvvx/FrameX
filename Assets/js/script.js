@@ -117,3 +117,19 @@ async function editModal(id) {
         alert("Gagal memuat data movie.");
     }
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+    const addUserBtn = document.getElementById("addUserBtn");
+    if (addUserBtn) {
+        addUserBtn.addEventListener("click", toggleAddUserModal);
+    }
+});
+
+function toggleAddUserModal() {
+    const modal = document.getElementById('addUserModal');
+    modal.classList.toggle('hidden');
+}
+
+function closeAddUserModal() {
+    document.getElementById('addUserModal').classList.add('hidden');
+}

@@ -9,7 +9,7 @@ if (!isset($_SESSION['user_logged_in']) || !$_SESSION['is_admin']) {
 include "../Conf/info.php";
 include "../Conf/database.php";
 
-$stmt = $db->query("SELECT * FROM log ORDER BY tanggal_log DESC");
+$stmt = $db->query("SELECT * FROM log ORDER BY tanggal_log DESC LIMIT 25");
 $logs = $stmt->fetchAll();
 
 $stmt2 = $db->query("SELECT username FROM users WHERE id =".$_SESSION['user_id']);
