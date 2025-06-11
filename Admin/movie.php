@@ -9,7 +9,7 @@ include "../Conf/info.php";
 include "../Conf/database.php";
 
 $stmt2 = $db->query("SELECT username FROM users WHERE id =".$_SESSION['user_id']);
-$username = $stmt2->fetch();
+$username = $stmt2->fetchColumn();
 
 $stmt3 = $db->query("SELECT * FROM genre ORDER BY name ASC");
 $genrename = $stmt3->fetchAll();
