@@ -18,7 +18,6 @@ if (!$movie) {
     die(json_encode(['error' => 'Movie tidak ditemukan']));
 }
 
-// Ambil genre movie
 $stmt = $db->prepare("SELECT genre_id FROM movie_genre WHERE movie_id = ?");
 $stmt->execute([$id]);
 $genres = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);

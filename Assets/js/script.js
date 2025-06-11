@@ -97,7 +97,7 @@ async function editTvShowModal(id) {
         const tvshow = await response.json();
 
         // Isi form dengan data tv show
-        document.getElementById('editTvShowId').value = tvshow.id; // New ID for hidden input
+        document.getElementById('editTvShowId').value = tvshow.id; // Corrected: Set the hidden ID field
         document.querySelector('#editTvShowModal input[name="title"]').value = tvshow.title;
         document.querySelector('#editTvShowModal input[name="tagline"]').value = tvshow.tagline;
         document.querySelector('#editTvShowModal input[name="first_air_date"]').value = tvshow.first_air_date; // Use first_air_date

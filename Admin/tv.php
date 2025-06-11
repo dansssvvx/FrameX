@@ -382,10 +382,10 @@ $nodata = "Belum ada data tersedia! Silahkan tambah terlebih dahulu.";
     </section>
 </div>
 
-<div id="editTvShowModal" class="fixed inset-0 z-50 hidden bg-black/30 backdrop-blur-sm flex items-center justify-center p-4">
+<div id="EditTVShowModal" class="fixed inset-0 z-50 hidden bg-black/30 backdrop-blur-sm flex items-center justify-center p-4">
     <section class="bg-white dark:bg-gray-900 rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto">
         <div class="py-8 px-8 mx-auto bg-eerie-black">
-            <h2 class="mb-6 text-2xl font-bold text-gray-900 dark:text-white">Edit TV Show</h2>
+            <h2 class="mb-6 text-2xl font-bold text-gray-900 dark:text-white">Update TV Show</h2>
             <form action="update_tvshow.php" method="POST">
                 <div class="grid gap-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -488,7 +488,7 @@ $nodata = "Belum ada data tersedia! Silahkan tambah terlebih dahulu.";
                         
                         <!-- Submit Button (Right) -->
                         <button type="submit" class="px-6 py-3 text-sm font-medium text-black bg-citrine rounded-lg hover:bg-citrine-hover focus:ring-4 focus:ring-citrine">
-                            + Update TV Show
+                            + Add TV Show
                         </button>
                     </div>
                 </div>
@@ -512,3 +512,21 @@ $nodata = "Belum ada data tersedia! Silahkan tambah terlebih dahulu.";
     @apply w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600 text-gray-900 dark:text-white;
   }
 </style>
+
+<script>
+
+function toggleModal() {
+    const modal = document.getElementById('tvshowmodal');
+    modal.classList.toggle('hidden');
+}
+
+function toggleModal() {
+    const modal = document.getElementById('EditTVShowModal');
+    modal.classList.toggle('hidden');
+}
+
+    function closeEditModal() { 
+    document.getElementById('EditTVShowModal').classList.add('hidden');
+}
+
+</script>

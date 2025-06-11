@@ -14,9 +14,6 @@ $username = $stmt2->fetch();
 $stmt3 = $db->query("SELECT * FROM genre ORDER BY name ASC");
 $genrename = $stmt3->fetchAll();
 
-$stmt4 = $db->query("SELECT username FROM users WHERE id =".$_SESSION['user_id']);
-$username = $stmt4->fetchColumn();
-
 $stmt = $db->query("SELECT * FROM custom_movie ORDER BY created_at");
 $custom_movie = $stmt->fetchAll();
 
@@ -378,7 +375,7 @@ $nodata = "Belum ada data tersedia! Silahkan tambah terlebih dahulu.";
 <div id="editModal" class="fixed inset-0 z-50 hidden bg-black/30 backdrop-blur-sm flex items-center justify-center p-4">
     <section class="bg-white dark:bg-gray-900 rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto">
         <div class="py-8 px-8 mx-auto bg-eerie-black">
-            <h2 class="mb-6 text-2xl font-bold text-gray-900 dark:text-white">Add a New Movie</h2>
+            <h2 class="mb-6 text-2xl font-bold text-gray-900 dark:text-white">Edit a Movie</h2>
             <form action="update_movie.php" method="POST">
                 <div class="grid gap-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">

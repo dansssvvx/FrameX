@@ -11,7 +11,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     die("Invalid request method");
 }
 
-// Get form data
 $id = $_POST['id'];
 $title = $_POST['title'];
 $overview = $_POST['overview'];
