@@ -88,7 +88,7 @@ async function editModal(id) {
 }
 
 async function editTvShowModal(id) {
-    const modal = document.getElementById('editTvShowModal'); // Use the new ID
+    const modal = document.getElementById('EditTVShowModal'); // Corrected: Use the new ID for the modal
     modal.classList.toggle('hidden');
 
     try {
@@ -97,19 +97,19 @@ async function editTvShowModal(id) {
         const tvshow = await response.json();
 
         // Isi form dengan data tv show
-        document.getElementById('editTvShowId').value = tvshow.id; // Corrected: Set the hidden ID field
-        document.querySelector('#editTvShowModal input[name="title"]').value = tvshow.title;
-        document.querySelector('#editTvShowModal input[name="tagline"]').value = tvshow.tagline;
-        document.querySelector('#editTvShowModal input[name="first_air_date"]').value = tvshow.first_air_date; // Use first_air_date
-        document.querySelector('#editTvShowModal select[name="status"]').value = tvshow.status;
-        document.querySelector('#editTvShowModal input[name="total_episodes"]').value = tvshow.total_episodes; // Use total_episodes
-        document.querySelector('#editTvShowModal input[name="total_seasons"]').value = tvshow.total_seasons; // Use total_seasons
-        document.querySelector('#editTvShowModal input[name="homepage"]').value = tvshow.homepage;
-        document.querySelector('#editTvShowModal input[name="poster"]').value = tvshow.poster_path;
-        document.querySelector('#editTvShowModal textarea[name="overview"]').value = tvshow.overview;
+        document.getElementById('editTvShowId').value = tvshow.id; // Set the hidden ID field
+        document.getElementById('editTvShowTitle').value = tvshow.title; // Corrected ID
+        document.getElementById('editTvShowTagline').value = tvshow.tagline; // Corrected ID
+        document.getElementById('editTvShowFirstAirDate').value = tvshow.first_air_date; // Corrected ID
+        document.getElementById('editTvShowStatus').value = tvshow.status; // Corrected ID
+        document.getElementById('editTvShowTotalEpisodes').value = tvshow.total_episodes; // Corrected ID
+        document.getElementById('editTvShowTotalSeasons').value = tvshow.total_seasons; // Corrected ID
+        document.getElementById('editTvShowHomepage').value = tvshow.homepage; // Corrected ID
+        document.getElementById('editTvShowPoster').value = tvshow.poster_path; // Corrected ID
+        document.getElementById('editTvShowOverview').value = tvshow.overview; // Corrected ID
 
         // Centang genre yang sesuai
-        const genreCheckboxes = document.querySelectorAll('#editTvShowModal input[name="genres[]"]');
+        const genreCheckboxes = document.querySelectorAll('#EditTVShowModal input[name="genres[]"]'); // Select within the correct modal
         genreCheckboxes.forEach(checkbox => {
             checkbox.checked = tvshow.genres.includes(parseInt(checkbox.value));
         });
@@ -135,19 +135,15 @@ function closeAddUserModal() {
     document.getElementById('addUserModal').classList.add('hidden');
 }
 
-function closeEditModal() {
-    document.getElementById('editTvShowModal').classList.add('hidden');
+function closeEditModal() { // This function is for movie edit modal, keep it as is
+    document.getElementById('editModal').classList.add('hidden');
 }
 
-function toggleModal() {
+function toggleModal() { // This function seems to be for adding new TV show modal
     const modal = document.getElementById('tvshowmodal');
     modal.classList.toggle('hidden');
 }
 
-function closeModal() {
+function closeModal() { // This function seems to be for closing new TV show modal
     document.getElementById('tvshowmodal').classList.add('hidden');
-}
-
-function closeEditModal() {
-    document.getElementById('editModal').classList.add('hidden');
 }
