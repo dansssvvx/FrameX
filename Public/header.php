@@ -70,7 +70,7 @@
           </li>
 
           <li>
-            <a href="#" class="navbar-link">About</a>
+            <a href="./about.php" class="navbar-link">About</a>
           </li>
 
         </ul>

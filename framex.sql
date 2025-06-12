@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 11 Jun 2025 pada 13.11
+-- Waktu pembuatan: 12 Jun 2025 pada 04.03
 -- Versi server: 10.1.38-MariaDB
 -- Versi PHP: 7.3.3
 
@@ -75,7 +75,8 @@ CREATE TABLE `custom_tv_show` (
 --
 
 INSERT INTO `custom_tv_show` (`id`, `title`, `overview`, `tagline`, `first_air_date`, `total_episodes`, `total_seasons`, `status`, `homepage`, `poster_path`, `created_at`) VALUES
-(1, 'Kesultanan Bogor B -Series', 'Sekuel dari FILM Kesultanan Bogor B', 'mok, mok, mok, moooook.  Seperti biasa', '2025-06-11', 9, 1, 'Returning Series', 'https://whatsapp.com', 'https://picsum.photos/2000/3000?random=192', '2025-06-11 08:48:27');
+(1, 'Kesultanan Bogor B -Series', 'Sekuel dari FILM Kesultanan Bogor B', 'mok, mok, mok, moooook.  Seperti biasa', '2025-06-11', 9, 1, 'Returning Series', 'https://whatsapp.com', 'https://picsum.photos/2000/3000?random=192', '2025-06-11 08:48:27'),
+(2, 'tes tv show', 'tes ubah tes update tes update tes update', 'movie tagline', '2025-06-11', 15, 2, 'Ended', 'https://instagram.com', 'https://picsum.photos/2000/3000?random=387', '2025-06-11 15:22:20');
 
 -- --------------------------------------------------------
 
@@ -198,7 +199,18 @@ INSERT INTO `log` (`id_log`, `isi_log`, `tanggal_log`, `id_user`) VALUES
 (36, 'rama (admin) berhasil logout', '2025-06-11 17:09:55', 2),
 (37, 'user (user) berhasil login', '2025-06-11 17:10:02', 1),
 (38, 'user (user) berhasil logout', '2025-06-11 17:32:46', 1),
-(39, 'rama (admin) berhasil login', '2025-06-11 17:32:56', 2);
+(39, 'rama (admin) berhasil login', '2025-06-11 17:32:56', 2),
+(40, 'rama (admin) menambahkan user baru: atmin dengan role: Admin', '2025-06-11 19:46:57', 2),
+(41, 'rama (admin) Mengganti role atmin menjadi User', '2025-06-11 19:47:11', 2),
+(42, 'rama (admin) Menghapus user:  (ID: 9)', '2025-06-11 19:47:15', 2),
+(43, 'rama (admin) berhasil login', '2025-06-11 21:12:30', 2),
+(44, 'rama (admin) menambahkan TV Show baru: tes tv show', '2025-06-11 23:22:20', 2),
+(45, 'rama (admin) Mengupdate TV Show dengan ID 2: tes tv show', '2025-06-11 23:23:01', 2),
+(46, 'rama (admin) Mengupdate TV Show dengan ID 2: tes tv show', '2025-06-11 23:23:35', 2),
+(47, 'rama (admin) berhasil logout', '2025-06-12 00:03:02', 2),
+(48, 'user (user) berhasil login', '2025-06-12 00:03:07', 1),
+(49, 'user (user) berhasil logout', '2025-06-12 00:33:00', 1),
+(50, 'user (user) berhasil login', '2025-06-12 08:03:04', 1);
 
 -- --------------------------------------------------------
 
@@ -239,7 +251,10 @@ CREATE TABLE `tvshow_genre` (
 
 INSERT INTO `tvshow_genre` (`tvshow_id`, `genre_id`) VALUES
 (1, 10463),
-(1, 10759);
+(1, 10759),
+(2, 12),
+(2, 18),
+(2, 35);
 
 -- --------------------------------------------------------
 
@@ -264,6 +279,53 @@ INSERT INTO `users` (`id`, `username`, `email`, `password`, `is_admin`, `created
 (1, 'user', 'user@gmail.com', '$2y$10$8Q4RfwmtBr2JztIpsnGW8eE2px.bLFtfK5XzcgDGM29rZcRQvd2wm', 0, '2025-06-08 23:04:29'),
 (2, 'rama', 'f1d02310102@gmail.com', '$2y$10$NdwmFrcNgt75MRnFrw.xz.1t73inJfrGKJZxTM8W44HnU4T2MEkSi', 1, '2025-06-09 02:03:39'),
 (3, 'ucii', 'sucitsrirhmdni.10@gmail.com', '$2y$10$HYGmi.kDSBw9IJMHZ5opNOCtYgc9ostO23180LPA8OU44M6VloC8S', 1, '2025-06-10 14:02:14');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `user_movies`
+--
+
+CREATE TABLE `user_movies` (
+  `user_id` int(11) NOT NULL,
+  `movie_id` int(11) NOT NULL,
+  `status` enum('Watching','Completed','On-hold','Dropped','Plan to Watch') NOT NULL,
+  `movie_type` enum('api_movie','custom_movie') NOT NULL,
+  `added_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data untuk tabel `user_movies`
+--
+
+INSERT INTO `user_movies` (`user_id`, `movie_id`, `status`, `movie_type`, `added_at`) VALUES
+(1, 1087192, 'Plan to Watch', 'api_movie', '2025-06-12 01:08:30');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `user_tv_list`
+--
+
+CREATE TABLE `user_tv_list` (
+  `user_id` int(11) NOT NULL,
+  `tv_show_id` int(11) NOT NULL,
+  `total_episodes` int(11) NOT NULL,
+  `total_seasons` int(11) NOT NULL,
+  `added_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `status` enum('watching','completed','on-hold','dropped','plan to watch') DEFAULT 'plan to watch',
+  `current_episode` int(11) DEFAULT '0',
+  `current_season` int(11) DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data untuk tabel `user_tv_list`
+--
+
+INSERT INTO `user_tv_list` (`user_id`, `tv_show_id`, `total_episodes`, `total_seasons`, `added_at`, `status`, `current_episode`, `current_season`) VALUES
+(1, 37854, 1135, 22, '2025-06-12 00:33:19', 'plan to watch', 110, 2),
+(1, 100088, 0, 0, '2025-06-12 00:12:36', 'plan to watch', 12, 2),
+(1, 245703, 9, 1, '2025-06-12 01:09:46', 'watching', 7, 1);
 
 --
 -- Indexes for dumped tables
@@ -316,6 +378,19 @@ ALTER TABLE `users`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indeks untuk tabel `user_movies`
+--
+ALTER TABLE `user_movies`
+  ADD PRIMARY KEY (`user_id`,`movie_id`,`movie_type`),
+  ADD KEY `movie_id` (`movie_id`);
+
+--
+-- Indeks untuk tabel `user_tv_list`
+--
+ALTER TABLE `user_tv_list`
+  ADD PRIMARY KEY (`user_id`,`tv_show_id`);
+
+--
 -- AUTO_INCREMENT untuk tabel yang dibuang
 --
 
@@ -329,23 +404,29 @@ ALTER TABLE `custom_movie`
 -- AUTO_INCREMENT untuk tabel `custom_tv_show`
 --
 ALTER TABLE `custom_tv_show`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT untuk tabel `log`
 --
 ALTER TABLE `log`
-  MODIFY `id_log` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `id_log` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT untuk tabel `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
 --
+
+--
+-- Ketidakleluasaan untuk tabel `custom_movie`
+--
+ALTER TABLE `custom_movie`
+  ADD CONSTRAINT `custom_movie_ibfk_1` FOREIGN KEY (`id`) REFERENCES `movie_genre` (`movie_id`);
 
 --
 -- Ketidakleluasaan untuk tabel `log`
@@ -366,6 +447,18 @@ ALTER TABLE `movie_genre`
 ALTER TABLE `tvshow_genre`
   ADD CONSTRAINT `tvshow_genre_ibfk_1` FOREIGN KEY (`tvshow_id`) REFERENCES `custom_tv_show` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `tvshow_genre_ibfk_2` FOREIGN KEY (`genre_id`) REFERENCES `genre` (`id`) ON DELETE CASCADE;
+
+--
+-- Ketidakleluasaan untuk tabel `user_movies`
+--
+ALTER TABLE `user_movies`
+  ADD CONSTRAINT `user_movies_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Ketidakleluasaan untuk tabel `user_tv_list`
+--
+ALTER TABLE `user_tv_list`
+  ADD CONSTRAINT `user_tv_list_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -13,23 +13,23 @@
           <ul class="footer-list">
 
             <li>
-              <a href="./index.html" class="footer-link">Home</a>
+              <a href="./index.php" class="footer-link">Home</a>
             </li>
 
             <li>
-              <a href="#" class="footer-link">Movie</a>
+              <a href="./trending" class="footer-link">Trending</a>
             </li>
 
             <li>
-              <a href="#" class="footer-link">TV Show</a>
+              <a href="./tvshow.php" class="footer-link">TV Show</a>
             </li>
 
             <li>
-              <a href="#" class="footer-link">Web Series</a>
+              <a href="./custommovie" class="footer-link">Editor's Pick</a>
             </li>
 
             <li>
-              <a href="#" class="footer-link">About</a>
+              <a href="./about.php" class="footer-link">About</a>
             </li>
 
           </ul>
