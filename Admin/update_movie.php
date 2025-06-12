@@ -15,7 +15,7 @@ $id = $_POST['id'];
 $title = $_POST['title'];
 $overview = $_POST['overview'];
 $tagline = $_POST['tagline'];
-$release_date= $_POST['release_date'];
+$release_date = $_POST['release_date'];
 $status = $_POST['status'];
 $revenue = $_POST['revenue'];
 $homepage = $_POST['homepage'];
@@ -25,6 +25,7 @@ $genres = $_POST['genres'] ?? [];
 try {
     $db->beginTransaction();
     
+    // 1. Update movie details in custom_movie table first
     $stmt = $db->prepare("UPDATE custom_movie SET 
         title = ?, 
         overview = ?, 
@@ -40,25 +41,30 @@ try {
         $title,
         $overview,
         $tagline,
-        $first_air_date,
+        $release_date,
         $status,
-        $total_episodes,
-        $total_seasons,
+        $revenue,
         $homepage,
         $poster_path,
         $id
     ]);
     
-    // Update genres
-    $db->prepare("DELETE FROM movie_genre WHERE movie = ?")->execute([$id]);
+    $db->prepare("DELETE FROM movie_genre WHERE movie_id = ?")->execute([$id]);
     
-    $stmt = $db->prepare("INSERT INTO movie_genre (movie_id, genre_id) VALUES (?, ?)");
-    foreach ($genres as $genreId) {
-        $stmt->execute([$id, $genreId]);
+    if (!empty($genres)) {
+        $stmt_genre = $db->prepare("INSERT INTO movie_genre (movie_id, genre_id) VALUES (?, ?)");
+        foreach ($genres as $genreId) {
+            $stmt_genre->execute([$id, $genreId]);
+        }
     }
     
     $db->commit();
-    $_SESSION['success'] = "TMovie updated successfully!";
+
+    $log_message = $_SESSION['username'] . " (admin) Mengupdate Movie dengan ID " . $id . ": " . $title;
+    $log_stmt = $db->prepare("INSERT INTO log (isi_log, tanggal_log, id_user) VALUES (?, NOW(), ?)");
+    $log_stmt->execute([$log_message, $_SESSION['user_id']]);
+
+    $_SESSION['success'] = "Movie updated successfully!";
 } catch (PDOException $e) {
     $db->rollBack();
     $_SESSION['error'] = "Error updating Movie: " . $e->getMessage();
@@ -66,3 +72,4 @@ try {
 
 header("Location: movie.php");
 exit;
+?>

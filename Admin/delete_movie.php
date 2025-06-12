@@ -14,7 +14,6 @@ if ($movie_id) {
     try {
         $db->beginTransaction();
 
-        // Fetch movie title for logging before deletion
         $stmt_fetch_title = $db->prepare("SELECT title FROM custom_movie WHERE id = ?");
         $stmt_fetch_title->execute([$movie_id]);
         $deleted_movie_title = $stmt_fetch_title->fetchColumn();
@@ -25,7 +24,7 @@ if ($movie_id) {
         $db->commit();
 
         // Log the action
-        $log_message = $_SESSION['username'] . " (admin) Menghapus movie: " . $deleted_movie_title . " (ID: " . $movie_id . ")";
+        $log_message = $_SESSION['username'] . " (admin) Menghapus movie: " . htmlspecialchars($deleted_movie_title) . " (ID: " . $movie_id . ")";
         $log_stmt = $db->prepare("INSERT INTO log (isi_log, tanggal_log, id_user) VALUES (?, NOW(), ?)");
         $log_stmt->execute([$log_message, $_SESSION['user_id']]);
 

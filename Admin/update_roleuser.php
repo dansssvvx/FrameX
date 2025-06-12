@@ -20,7 +20,6 @@ try {
     $stmt->execute([$user_id]);
     $current_role = $stmt->fetchColumn();
     
-    // Toggle role (0 menjadi 1, 1 menjadi 0)
     $new_role = $current_role ? 0 : 1;
     
     // Update role

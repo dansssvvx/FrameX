@@ -55,8 +55,8 @@ $nodata = "Belum ada data tersedia! Silahkan tambah terlebih dahulu.";
                         'xiketic': 'hsl(253, 21%, 13%)',
                         'gray-x': 'hsl(0, 0%, 74%)',
                         'app-white': 'hsl(0, 100%, 100%)',
-                        'app-black': 'hsl(0, 0%, 0%)', 
-                        'app-jet': 'hsl(0, 0%, 20%)', 
+                        'app-black': 'hsl(0, 0%, 0%)',
+                        'app-jet': 'hsl(0, 0%, 20%)',
                     }
                 }
             }
@@ -136,11 +136,6 @@ $nodata = "Belum ada data tersedia! Silahkan tambah terlebih dahulu.";
            </ul>
          </li>
          <li>
-           <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-app-white hover:bg-gray-100 dark:hover:bg-gunmetal-2 group"> <svg class="shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-x group-hover:text-gray-900 dark:group-hover:text-app-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20"> <path d="m17.418 3.623-.018-.008a6.713 6.713 0 0 0-2.4-.569V2h1a1 1 0 1 0 0-2h-2a1 1 0 0 0-1 1v2H9.89A6.977 6.977 0 0 1 12 8v5h-2V8A5 5 0 1 0 0 8v6a1 1 0 0 0 1 1h8v4a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-4h6a1 1 0 0 0 1-1V8a5 5 0 0 0-2.582-4.377ZM6 12H4a1 1 0 0 1 0-2h2a1 1 0 0 1 0 2Z"/>
-               </svg>
-               <span class="flex-1 ms-3 whitespace-nowrap">Inbox</span>
-               <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-gunmetal-2 dark:text-gray-x">3</span> </a>
-         </li>
            <a href="./log.php" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-app-white hover:bg-gray-100 dark:hover:bg-gunmetal-2 group"> 
             
            <svg  class="shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-x group-hover:text-gray-900 dark:group-hover:text-app-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
@@ -148,7 +143,7 @@ $nodata = "Belum ada data tersedia! Silahkan tambah terlebih dahulu.";
             <path d="M18.75 6.75h1.875c.621 0 1.125.504 1.125 1.125V18a1.5 1.5 0 0 1-3 0V6.75Z" />
             </svg>
                <span class="flex-1 ms-3 whitespace-nowrap">Log</span> </a>
-         </>
+         </li>
          <li>
            <a href="../Auth/logout.php" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-app-white hover:bg-gray-100 dark:hover:bg-gunmetal-2 group"> <svg class="shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-x group-hover:text-gray-900 dark:group-hover:text-app-white" aria-hidden="true"xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
             <path fill-rule="evenodd" d="M16.5 3.75a1.5 1.5 0 0 1 1.5 1.5v13.5a1.5 1.5 0 0 1-1.5 1.5h-6a1.5 1.5 0 0 1-1.5-1.5V15a.75.75 0 0 0-1.5 0v3.75a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V5.25a3 3 0 0 0-3-3h-6a3 3 0 0 0-3 3V9A.75.75 0 1 0 9 9V5.25a1.5 1.5 0 0 1 1.5-1.5h6ZM5.78 8.47a.75.75 0 0 0-1.06 0l-3 3a.75.75 0 0 0 0 1.06l3 3a.75.75 0 0 0 1.06-1.06l-1.72-1.72H15a.75.75 0 0 0 0-1.5H4.06l1.72-1.72a.75.75 0 0 0 0-1.06Z" clip-rule="evenodd" />
@@ -209,9 +204,9 @@ $nodata = "Belum ada data tersedia! Silahkan tambah terlebih dahulu.";
             <th scope="row" class="px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
                 <?php echo $no?>
             </th>
-            <td class="px-6 py-4 text-white"><?php echo $m['title'] ?></td>
-            <td class="px-6 py-4 text-white"><?php echo $m['overview'] ?></td>
-            <td class="px-6 py-4 text-white"><?php echo $m['tagline']  ?></td>
+            <td class="px-6 py-4 text-white"><?php echo htmlspecialchars($m['title']) ?></td>
+            <td class="px-6 py-4 text-white"><?php echo htmlspecialchars($m['overview']) ?></td>
+            <td class="px-6 py-4 text-white"><?php echo htmlspecialchars($m['tagline'])  ?></td>
             <td class="px-6 py-4 text-white">
                 <?php $stmt7 = $db->query("SELECT COUNT(*) from movie_genre WHERE movie_id =".$m['id'] );
                         $gcount = $stmt7->fetchcolumn();
@@ -220,7 +215,7 @@ $nodata = "Belum ada data tersedia! Silahkan tambah terlebih dahulu.";
                     $stmt6 = $db->query("SELECT name FROM genre WHERE id =".$g['genre_id']);
                     $p = $stmt6->fetch();
                     ?>
-                    <?php echo $p['name']; $nogenre++;
+                    <?php echo htmlspecialchars($p['name']); $nogenre++;
                         if($nogenre < $gcount){
                             echo ", ";
                         }else{
@@ -229,15 +224,15 @@ $nodata = "Belum ada data tersedia! Silahkan tambah terlebih dahulu.";
                     ?>
                 <?php endforeach;  ?>
             </td>
-            <td class="px-6 py-4 text-white"><?php echo $m['release_date']  ?></td>
-            <td class="px-6 py-4 text-white"><?php echo $m['status']  ?></td>
+            <td class="px-6 py-4 text-white"><?php echo htmlspecialchars($m['release_date'])  ?></td>
+            <td class="px-6 py-4 text-white"><?php echo htmlspecialchars($m['status'])  ?></td>
             <td class="px-6 py-4 text-white">$ <?php echo number_format($m['revenue'],0,',','.')  ?></td>
-            <td class="px-6 py-4 text-white"><a href="<?php echo $m['homepage']?>"><?php echo $m['homepage']  ?></a></td>
-            <td class="px-6 py-4 text-white"><a href="<?php echo $m['poster_path']?>"><?php echo $m['poster_path']  ?></a></td>
-            <td class="px-6 py-4 text-white"><?php echo $m['created_at']  ?></td>
+            <td class="px-6 py-4 text-white"><a href="<?php echo htmlspecialchars($m['homepage'])?>"><?php echo htmlspecialchars($m['homepage'])  ?></a></td>
+            <td class="px-6 py-4 text-white"><a href="<?php echo htmlspecialchars($m['poster_path'])?>"><?php echo htmlspecialchars($m['poster_path'])  ?></a></td>
+            <td class="px-6 py-4 text-white"><?php echo htmlspecialchars($m['created_at'])  ?></td>
             <td class="flex items-center px-6 py-4">
                 <button onclick="editModal(<?php echo $m['id']?>)"> <a href="#" class="font-medium text-citrine dark:text-citrine hover:underline">Edit</a></button>
-                <a href="delete_movie.php" class="font-medium text-red-600 dark:text-red-500 hover:underline ms-3">Remove</a>
+                <a href="delete_movie.php?id=<?php echo $m['id'] ?>" class="font-medium text-red-600 dark:text-red-500 hover:underline ms-3" onclick="return confirm('Are you sure you want to delete this movie?');">Remove</a>
             </td>
 
         </tr>
@@ -272,7 +267,6 @@ $nodata = "Belum ada data tersedia! Silahkan tambah terlebih dahulu.";
             <form action="insert_movie.php" method="POST">
                 <div class="grid gap-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Left Column -->
                         <div class="space-y-6">
                             <div>
                                 <label for="title" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Movie Title</label>
@@ -293,10 +287,8 @@ $nodata = "Belum ada data tersedia! Silahkan tambah terlebih dahulu.";
                             </div>
                         </div>
 
-                        <!-- Right Column -->
                         <div class="space-y-6">
                             <div class="grid grid-cols-2 gap-4">
-                                <!-- Status Dropdown -->
                                 <div>
                                     <label for="status" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Status</label>
                                     <select name="status" id="status" required 
@@ -311,7 +303,6 @@ $nodata = "Belum ada data tersedia! Silahkan tambah terlebih dahulu.";
                                     </select>
                                 </div>
 
-                                <!-- Revenue -->
                                 <div>
                                     <label for="revenue" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Revenue ($)</label>
                                     <input type="number" name="revenue" id="revenue" placeholder="e.g. 1500000" 
@@ -333,35 +324,29 @@ $nodata = "Belum ada data tersedia! Silahkan tambah terlebih dahulu.";
                         </div>
                     </div>
 
-                    <!-- Genre Checkboxes (2 columns) -->
                     <div>
                         <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Genres</label>
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-3 p-4 border border-gray-300 rounded-lg dark:border-gray-600 max-h-[200px] overflow-y-auto">
-                            <!-- Main Genres -->
                             <?php foreach ($genrename as $g): ?>
                                 <div class="flex items-center">
                                     <input id="genre-<?php echo ($g['id'])?>" type="checkbox" name="genres[]" value="<?php echo($g['id'])?>" class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                    <label for="genre-<?php echo ($g['id'])?>" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"><?php echo ($g['name'])?></label>
+                                    <label for="genre-<?php echo ($g['id'])?>" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"><?php echo htmlspecialchars($g['name'])?></label>
                                 </div>
                             <?php endforeach; ?>
                         </div>
                     </div>
 
-                    <!-- Overview (full width) -->
                     <div>
                         <label for="overview" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" style="margin-top:10px;">Overview</label>
                         <textarea name="overview" id="overview" rows="6" required placeholder="Brief description of the movie" 
                             class="w-full p-3 border border-gray-300 rounded-lg dark:bg-app-white dark:border-gray-600"></textarea>
                     </div>
 
-                    <!-- Button Container -->
                     <div class="flex justify-between mt-6">
-                        <!-- Cancel Button (Left) -->
                         <button type="button" onclick="closeModal()" class="px-6 py-3 text-sm font-medium text-black bg-gray-300 rounded-lg hover:bg-gray-400 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-600">
                             Cancel
                         </button>
                         
-                        <!-- Submit Button (Right) -->
                         <button type="submit" class="px-6 py-3 text-sm font-medium text-black bg-citrine rounded-lg hover:bg-citrine-hover focus:ring-4 focus:ring-citrine">
                             + Add Movie
                         </button>
@@ -379,35 +364,32 @@ $nodata = "Belum ada data tersedia! Silahkan tambah terlebih dahulu.";
             <form action="update_movie.php" method="POST">
                 <div class="grid gap-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Left Column -->
                         <div class="space-y-6">
                             <div>
                                 <input type="hidden" name="id" id="editMovieId"value="">
-                                <label for="title" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Movie Title</label>
-                                <input type="text" name="title" id="title" required placeholder="Enter movie title" 
+                                <label for="editTitle" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Movie Title</label>
+                                <input type="text" name="title" id="editTitle" required placeholder="Enter movie title" 
                                     class="w-full p-3 border border-gray-300 rounded-lg dark:bg-app-white dark:border-gray-600">
                             </div>
                             
                             <div>
-                                <label for="tagline" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tagline</label>
-                                <input type="text" name="tagline" id="tagline" placeholder="Movie tagline" 
+                                <label for="editTagline" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tagline</label>
+                                <input type="text" name="tagline" id="editTagline" placeholder="Movie tagline" 
                                     class="w-full p-3 border border-gray-300 rounded-lg dark:bg-app-white dark:border-gray-600">
                             </div>
                             
                             <div>
-                                <label for="release_date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Release Date</label>
-                                <input type="date" name="release_date" id="release_date" required 
+                                <label for="editRelease_date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Release Date</label>
+                                <input type="date" name="release_date" id="editRelease_date" required 
                                     class="w-full p-3 border border-gray-300 rounded-lg dark:bg-app-white dark:border-gray-600">
                             </div>
                         </div>
 
-                        <!-- Right Column -->
                         <div class="space-y-6">
                             <div class="grid grid-cols-2 gap-4">
-                                <!-- Status Dropdown -->
                                 <div>
-                                    <label for="status" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Status</label>
-                                    <select name="status" id="status" required 
+                                    <label for="editStatus" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Status</label>
+                                    <select name="status" id="editStatus" required 
                                         class="w-full p-3 border border-gray-300 rounded-lg dark:bg-app-white dark:border-gray-600 ">
                                         <option value="">Select status</option>
                                         <option value="Released">Released</option>
@@ -419,59 +401,52 @@ $nodata = "Belum ada data tersedia! Silahkan tambah terlebih dahulu.";
                                     </select>
                                 </div>
 
-                                <!-- Revenue -->
                                 <div>
-                                    <label for="revenue" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Revenue ($)</label>
-                                    <input type="number" name="revenue" id="revenue" placeholder="e.g. 1500000" 
+                                    <label for="editRevenue" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Revenue ($)</label>
+                                    <input type="number" name="revenue" id="editRevenue" placeholder="e.g. 1500000" 
                                         class="w-full p-3 border border-gray-300 rounded-lg dark:bg-app-white dark:border-gray-600">
                                 </div>
                             </div>
 
                             <div>
-                                <label for="homepage" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Homepage URL</label>
-                                <input type="url" name="homepage" id="homepage" placeholder="https://example.com" 
+                                <label for="editHomepage" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Homepage URL</label>
+                                <input type="url" name="homepage" id="editHomepage" placeholder="https://example.com" 
                                     class="w-full p-3 border border-gray-300 rounded-lg dark:bg-app-white dark:border-gray-600">
                             </div>
                             
                             <div>
-                                <label for="poster" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Poster URL</label>
-                                <input type="url" name="poster" id="poster" placeholder="https://image-link.com" 
+                                <label for="editPoster" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Poster URL</label>
+                                <input type="url" name="poster" id="editPoster" placeholder="https://image-link.com" 
                                     class="w-full p-3 border border-gray-300 rounded-lg dark:bg-app-white dark:border-gray-600">
                             </div>
                         </div>
                     </div>
 
-                    <!-- Genre Checkboxes (2 columns) -->
                     <div>
                         <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Genres</label>
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-3 p-4 border border-gray-300 rounded-lg dark:border-gray-600 max-h-[200px] overflow-y-auto">
-                            <!-- Main Genres -->
                             <?php foreach ($genrename as $g): ?>
                                 <div class="flex items-center">
-                                    <input id="genre-<?php echo ($g['id'])?>" type="checkbox" name="genres[]" value="<?php echo($g['id'])?>" class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                    <label for="genre-<?php echo ($g['id'])?>" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"><?php echo ($g['name'])?></label>
+                                    <input id="editGenre-<?php echo htmlspecialchars($g['id'])?>" type="checkbox" name="genres[]" value="<?php echo htmlspecialchars($g['id'])?>" class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <label for="editGenre-<?php echo htmlspecialchars($g['id'])?>" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"><?php echo htmlspecialchars($g['name'])?></label>
                                 </div>
                             <?php endforeach; ?>
                         </div>
                     </div>
 
-                    <!-- Overview (full width) -->
                     <div>
-                        <label for="overview" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" style="margin-top:10px;">Overview</label>
-                        <textarea name="overview" id="overview" rows="6" required placeholder="Brief description of the movie" 
+                        <label for="editOverview" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" style="margin-top:10px;">Overview</label>
+                        <textarea name="overview" id="editOverview" rows="6" required placeholder="Brief description of the movie" 
                             class="w-full p-3 border border-gray-300 rounded-lg dark:bg-app-white dark:border-gray-600"></textarea>
                     </div>
 
-                    <!-- Button Container -->
                     <div class="flex justify-between mt-6">
-                        <!-- Cancel Button (Left) -->
                         <button type="button" onclick="closeEditModal()" class="px-6 py-3 text-sm font-medium text-black bg-gray-300 rounded-lg hover:bg-gray-400 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-600">
                             Cancel
                         </button>
                         
-                        <!-- Submit Button (Right) -->
                         <button type="submit" class="px-6 py-3 text-sm font-medium text-black bg-citrine rounded-lg hover:bg-citrine-hover focus:ring-4 focus:ring-citrine">
-                            + Update Movie
+                            Update Movie
                         </button>
                     </div>
                 </div>
@@ -496,7 +471,6 @@ $nodata = "Belum ada data tersedia! Silahkan tambah terlebih dahulu.";
   }
 </style>
 
-<!-- Toggle Script -->
 <script>
 function toggleModal() {
     const modal = document.getElementById('movieModal');
@@ -507,7 +481,40 @@ function closeModal() {
     document.getElementById('movieModal').classList.add('hidden');
 }
 
+// Ensure this function exists and targets the correct edit modal
 function closeEditModal() {
     document.getElementById('editModal').classList.add('hidden');
+}
+
+async function editModal(id) {
+    const modal = document.getElementById('editModal');
+    modal.classList.toggle('hidden');
+
+    try {
+        // Fetch data movie dari server
+        const response = await fetch(`get_movie.php?id=${id}`);
+        const movie = await response.json();
+
+        // Isi form dengan data movie
+        document.getElementById('editMovieId').value = movie.id;
+        document.getElementById('editTitle').value = movie.title;
+        document.getElementById('editTagline').value = movie.tagline;
+        document.getElementById('editRelease_date').value = movie.release_date;
+        document.getElementById('editStatus').value = movie.status;
+        document.getElementById('editRevenue').value = movie.revenue;
+        document.getElementById('editHomepage').value = movie.homepage;
+        document.getElementById('editPoster').value = movie.poster_path;
+        document.getElementById('editOverview').value = movie.overview;
+
+        // Centang genre yang sesuai
+        const genreCheckboxes = document.querySelectorAll('#editModal input[name="genres[]"]');
+        genreCheckboxes.forEach(checkbox => {
+            checkbox.checked = movie.genres.includes(parseInt(checkbox.value));
+        });
+    } catch (error) {
+        console.error("Error fetching movie data:", error);
+        alert("Gagal memuat data movie.");
+        closeEditModal(); // Close modal on error
+    }
 }
 </script>

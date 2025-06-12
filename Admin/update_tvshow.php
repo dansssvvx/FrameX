@@ -51,7 +51,6 @@ try {
         $id
     ]);
 
-    // Update genres
     $db->prepare("DELETE FROM tvshow_genre WHERE tvshow_id = ?")->execute([$id]);
 
     $stmt = $db->prepare("INSERT INTO tvshow_genre (tvshow_id, genre_id) VALUES (?, ?)");
