@@ -147,3 +147,4 @@ function toggleModal() { // This function seems to be for adding new TV show mod
 function closeModal() { // This function seems to be for closing new TV show modal
     document.getElementById('tvshowmodal').classList.add('hidden');
 }
+

@@ -25,6 +25,7 @@
         </div>
 
         <?php if (isset($_SESSION['user_logged_in'])): ?>
+        <a href="./profile.php?id=<?php echo $_SESSION['user_id']?>" class="btn btn-primary"><?php echo $_SESSION['username'] ?></a>
         <a href="../Auth/logout.php" class="btn btn-primary">Log out</a>
        <?php else: ?>
         <a href="../Auth/login.php" class="btn btn-primary">Login</a>
