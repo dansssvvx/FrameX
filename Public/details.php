@@ -280,7 +280,7 @@ if ($type === 'tv') {
               <?php else: ?>
                   <button class="btn btn-primary" disabled style="opacity: 0.6; cursor: not-allowed;">
                       <ion-icon name="play"></ion-icon>
-                      <span>Add To Your List (TV Show Only)</span>
+                      <span>This feature is unavailabale for custom movie</span>
                   </button>
               <?php endif; ?>
 
