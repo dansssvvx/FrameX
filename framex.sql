@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 12 Jun 2025 pada 04.03
+-- Waktu pembuatan: 01 Jul 2025 pada 05.56
 -- Versi server: 10.1.38-MariaDB
 -- Versi PHP: 7.3.3
 
@@ -48,7 +48,8 @@ CREATE TABLE `custom_movie` (
 INSERT INTO `custom_movie` (`id`, `title`, `overview`, `tagline`, `release_date`, `status`, `revenue`, `homepage`, `poster_path`, `created_at`) VALUES
 (2, 'Dit, geprek satu', 'Kisah ini berfokus pada seorang pria bernama Yoga, yang sering makan ayam geprek di warung milik Pak Adit.', 'Pak Adit, Gepreknya satu!', '2025-06-11', 'Released', 1234, 'https://instagram.com', 'https://picsum.photos/2000/3000?random=1', '2025-06-10 20:47:43'),
 (3, 'Kesultanan Bogor B', 'Tragedi dimulai saat isi WAG (WhatsApp Group) yang tidak sengaja kesebar.......', 'mok, mok, mok, moooook', '2025-06-11', 'Rumored', 0, 'https://whatsapp.com', 'https://picsum.photos/2000/3000?random=2', '2025-06-11 01:29:16'),
-(4, 'Semoga masih ada artinya', 'brief description the movie', 'Dari dapur kecil, menjadi besar', '2025-06-11', 'Planned', 0, 'https://facebook.com', 'https://picsum.photos/2000/3000?random=3', '2025-06-11 01:36:34');
+(4, 'Semoga masih ada artinya', 'brief description the movie', 'Dari dapur kecil, menjadi besar', '2025-06-11', 'Planned', 0, 'https://facebook.com', 'https://picsum.photos/2000/3000?random=3', '2025-06-11 01:36:34'),
+(5, 'Absolute Cinema', 'ini deskripsi', 'popmie', '2025-06-12', 'Rumored', 0, 'https://ikn.go.id/', '../Assets/images/Cover/freaky.png', '2025-06-12 05:25:31');
 
 -- --------------------------------------------------------
 
@@ -210,7 +211,55 @@ INSERT INTO `log` (`id_log`, `isi_log`, `tanggal_log`, `id_user`) VALUES
 (47, 'rama (admin) berhasil logout', '2025-06-12 00:03:02', 2),
 (48, 'user (user) berhasil login', '2025-06-12 00:03:07', 1),
 (49, 'user (user) berhasil logout', '2025-06-12 00:33:00', 1),
-(50, 'user (user) berhasil login', '2025-06-12 08:03:04', 1);
+(50, 'user (user) berhasil login', '2025-06-12 08:03:04', 1),
+(51, 'user (user) berhasil logout', '2025-06-12 11:52:48', 1),
+(52, 'rama (admin) berhasil login', '2025-06-12 11:53:05', 2),
+(53, 'rama (admin) Mengupdate TV Show dengan ID 1: Kesultanan Bogor B -Series', '2025-06-12 12:06:05', 2),
+(54, 'rama (admin) Mengupdate Movie dengan ID 3: Kesultanan Bogor B', '2025-06-12 12:13:36', 2),
+(55, 'rama (admin) berhasil login', '2025-06-12 13:22:54', 2),
+(56, 'rama (admin) menambahkan Movie baru: Absolute Cinema', '2025-06-12 13:25:31', 2),
+(57, 'rama (admin) berhasil logout', '2025-06-12 13:27:10', 2),
+(58, 'user (user) berhasil login', '2025-06-12 13:27:17', 1),
+(59, 'user (user) berhasil logout', '2025-06-12 13:39:57', 1),
+(60, 'rama (admin) berhasil login', '2025-06-12 13:40:10', 2),
+(61, 'ucii (admin) berhasil login', '2025-06-12 13:55:00', 3),
+(62, 'ucii (admin) menambahkan Movie baru: webb', '2025-06-12 13:57:29', 3),
+(63, 'ucii (admin) Mengupdate Movie dengan ID 6: webb', '2025-06-12 13:58:03', 3),
+(64, 'ucii (admin) Menghapus movie: webb (ID: 6)', '2025-06-12 13:58:12', 3),
+(65, 'ucii (admin) berhasil logout', '2025-06-12 13:59:35', 3),
+(66, 'ucii (admin) berhasil login', '2025-06-12 13:59:51', 3),
+(67, 'ucii (admin) berhasil login', '2025-06-12 13:59:57', 3),
+(68, 'ucii (admin) berhasil login', '2025-06-12 14:00:04', 3),
+(69, 'ucii (admin) berhasil login', '2025-06-12 14:00:10', 3),
+(70, 'ucii (admin) berhasil login', '2025-06-12 14:00:17', 3),
+(71, 'ucii (admin) berhasil login', '2025-06-12 14:00:17', 3),
+(72, 'ucii (admin) berhasil login', '2025-06-12 14:00:17', 3),
+(73, 'ucii (admin) berhasil login', '2025-06-12 14:00:17', 3),
+(74, 'ucii (admin) berhasil login', '2025-06-12 14:00:19', 3),
+(75, 'ucii (admin) berhasil login', '2025-06-12 14:00:19', 3),
+(76, 'ucii (admin) berhasil login', '2025-06-12 14:00:25', 3),
+(77, 'ucii (admin) berhasil logout', '2025-06-12 14:01:23', 3),
+(78, 'user (user) berhasil login', '2025-06-12 14:01:32', 1),
+(79, 'user (user) berhasil logout', '2025-06-12 14:10:48', 1),
+(80, 'user (user) berhasil login', '2025-06-12 14:21:36', 1),
+(81, 'rama (admin) berhasil login', '2025-06-12 16:20:59', 2),
+(82, 'rama (admin) berhasil login', '2025-06-12 16:21:16', 2),
+(83, 'rama (admin) berhasil login', '2025-06-12 16:21:16', 2),
+(84, 'rama (admin) berhasil login', '2025-06-12 16:21:16', 2),
+(85, 'rama (admin) berhasil login', '2025-06-12 16:21:31', 2),
+(86, 'rama (admin) berhasil login', '2025-06-12 16:21:31', 2),
+(87, 'rama (admin) berhasil login', '2025-06-12 16:21:31', 2),
+(88, 'rama (admin) berhasil login', '2025-06-12 16:21:32', 2),
+(89, 'rama (admin) berhasil login', '2025-06-12 16:21:36', 2),
+(90, 'rama (admin) berhasil logout', '2025-06-12 16:22:47', 2),
+(91, 'user (user) berhasil login', '2025-06-12 16:22:58', 1),
+(92, 'user (user) berhasil login', '2025-06-15 22:03:28', 1),
+(93, 'user (user) berhasil login', '2025-06-21 18:11:31', 1),
+(94, 'user (user) berhasil login', '2025-06-26 13:53:28', 1),
+(95, 'user (user) berhasil login', '2025-06-29 15:28:17', 1),
+(96, 'user (user) berhasil login', '2025-07-01 11:16:23', 1),
+(97, 'user (user) berhasil logout', '2025-07-01 11:40:24', 1),
+(98, 'rama (admin) berhasil login', '2025-07-01 11:40:36', 2);
 
 -- --------------------------------------------------------
 
@@ -229,10 +278,13 @@ CREATE TABLE `movie_genre` (
 
 INSERT INTO `movie_genre` (`movie_id`, `genre_id`) VALUES
 (2, 10759),
-(3, 10463),
-(3, 11565),
+(3, 12),
+(3, 10759),
 (4, 10766),
-(4, 10767);
+(4, 10767),
+(5, 10463),
+(5, 11450),
+(5, 11565);
 
 -- --------------------------------------------------------
 
@@ -250,8 +302,7 @@ CREATE TABLE `tvshow_genre` (
 --
 
 INSERT INTO `tvshow_genre` (`tvshow_id`, `genre_id`) VALUES
-(1, 10463),
-(1, 10759),
+(1, 11132),
 (2, 12),
 (2, 18),
 (2, 35);
@@ -299,7 +350,9 @@ CREATE TABLE `user_movies` (
 --
 
 INSERT INTO `user_movies` (`user_id`, `movie_id`, `status`, `movie_type`, `added_at`) VALUES
-(1, 1087192, 'Plan to Watch', 'api_movie', '2025-06-12 01:08:30');
+(1, 552524, 'Plan to Watch', 'api_movie', '2025-06-12 06:24:50'),
+(1, 1087192, 'Plan to Watch', 'api_movie', '2025-06-12 01:08:30'),
+(1, 1233413, 'Watching', 'api_movie', '2025-06-12 06:03:08');
 
 -- --------------------------------------------------------
 
@@ -398,7 +451,7 @@ ALTER TABLE `user_tv_list`
 -- AUTO_INCREMENT untuk tabel `custom_movie`
 --
 ALTER TABLE `custom_movie`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT untuk tabel `custom_tv_show`
@@ -410,7 +463,7 @@ ALTER TABLE `custom_tv_show`
 -- AUTO_INCREMENT untuk tabel `log`
 --
 ALTER TABLE `log`
-  MODIFY `id_log` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `id_log` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=99;
 
 --
 -- AUTO_INCREMENT untuk tabel `users`
@@ -421,12 +474,6 @@ ALTER TABLE `users`
 --
 -- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
 --
-
---
--- Ketidakleluasaan untuk tabel `custom_movie`
---
-ALTER TABLE `custom_movie`
-  ADD CONSTRAINT `custom_movie_ibfk_1` FOREIGN KEY (`id`) REFERENCES `movie_genre` (`movie_id`);
 
 --
 -- Ketidakleluasaan untuk tabel `log`
