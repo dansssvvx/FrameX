@@ -3,7 +3,7 @@ session_start();
 
 // Cek apakah user sudah login DAN memiliki role admin
 if (!isset($_SESSION['user_logged_in']) || !$_SESSION['is_admin']) {
-    header("Location: ./login.php?error=access_denied");
+    header("Location: ../Auth/login.php?error=access_denied");
     exit;
 }
 include "../Conf/info.php";
@@ -30,6 +30,28 @@ $countcustom = $stmt3->fetchColumn();
 $stmt4 = $db->query("SELECT COUNT(*) FROM custom_tv_show");
 $countcustomtv = $stmt4->fetchColumn();
 
+// Include activity logger
+include "activity_logger.php";
+
+// Get recent activities (with error handling)
+try {
+    $recent_activities = getRecentActivities($db, 5);
+} catch (Exception $e) {
+    $recent_activities = [];
+}
+
+// Get top movies
+$stmt6 = $db->query("SELECT * FROM custom_movie ORDER BY created_at DESC LIMIT 3");
+$recent_movies = $stmt6->fetchAll(PDO::FETCH_ASSOC);
+
+// Get top TV shows
+$stmt7 = $db->query("SELECT * FROM custom_tv_show ORDER BY created_at DESC LIMIT 3");
+$recent_tvshows = $stmt7->fetchAll(PDO::FETCH_ASSOC);
+
+$total_movies = $discover_movie->total_results + $countcustom;
+$total_tvshow = $discover_tv->total_results + $countcustomtv;
+$total_users = $countuser + $countadmin;
+
 ?>
 
 <!DOCTYPE html>
@@ -37,11 +59,11 @@ $countcustomtv = $stmt4->fetchColumn();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin | Frame X</title>
+    <title>Admin Dashboard | Frame X</title>
 
     <link rel="shortcut icon" href="../Assets/images/icon.png" type="image/png">
     <link rel="stylesheet" href="../Assets/css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -50,7 +72,7 @@ $countcustomtv = $stmt4->fetchColumn();
                     fontFamily: {
                         poppins: ['Poppins', 'sans-serif'],
                     },
-                    colors: { // Tambahkan konfigurasi warna kustom di sini
+                    colors: {
                         'rich-black-fogra-29': 'hsl(225, 25%, 9%)',
                         'rich-black-fogra-39': 'hsl(170, 21%, 5%)',
                         'raisin-black': 'hsl(228, 13%, 15%)',
@@ -73,162 +95,460 @@ $countcustomtv = $stmt4->fetchColumn();
         }
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-           
         }
-        :root {
-            --rich-black-fogra-29: hsl(225, 25%, 9%);
-            --rich-black-fogra-39: hsl(170, 21%, 5%);
-            --raisin-black: hsl(228, 13%, 15%);
-            --eerie-black: hsl(207, 19%, 11%);
-            --light-gray: hsl(0, 3%, 80%);
-            --gunmetal-1: hsl(229, 15%, 21%);
-            --gunmetal-2: hsl(216, 22%, 18%);
-            --gainsboro: hsl(0, 7%, 88%);
-            --citrine: hsl(57, 97%, 45%);
-            --citrine-hover: hsl(57, 97%, 55%);
-            --citrine-ring: hsla(57, 97%, 45%, 0.4);
-            --xiketic: hsl(253, 21%, 13%);
-            --gray-x: hsl(0, 0%, 74%);
-            --white: hsl(0, 100%, 100%);
-            --black: hsl(0, 0%, 0%);
-            --jet: hsl(0, 0%, 20%);
+        .stat-card {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        .activity-item {
+            transition: all 0.3s ease;
+        }
+        .activity-item:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
     </style>
 </head>
-<body class="font-poppins">
+<body class="font-poppins bg-rich-black-fogra-39 text-app-white">
     
-<button data-drawer-target="sidebar-multi-level-sidebar" data-drawer-toggle="sidebar-multi-level-sidebar" aria-controls="sidebar-multi-level-sidebar" type="button" class="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 ">
+<!-- Mobile menu button -->
+<button data-drawer-target="sidebar-multi-level-sidebar" data-drawer-toggle="sidebar-multi-level-sidebar" aria-controls="sidebar-multi-level-sidebar" type="button" class="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200">
    <span class="sr-only">Open sidebar</span>
    <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
    <path clip-rule="evenodd" fill-rule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"></path>
    </svg>
 </button>
 
+<!-- Sidebar -->
 <aside id="sidebar-multi-level-sidebar" class="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
-   <div class="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-eerie-black"> <ul class="space-y-2 font-medium">
+   <div class="h-full px-3 py-4 overflow-y-auto bg-gradient-to-b from-eerie-black to-gunmetal-2 border-r border-gray-700">
+     <div class="mb-6 p-4 glass-effect rounded-lg">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 bg-citrine rounded-full flex items-center justify-center">
+                <span class="text-black font-bold text-lg"><?php echo strtoupper(substr($username, 0, 1)); ?></span>
+            </div>
+            <div>
+                <p class="text-sm text-gray-300">Welcome back,</p>
+                <p class="font-semibold text-app-white"><?php echo ucfirst($username); ?></p>
+            </div>
+        </div>
+     </div>
+     
+     <ul class="space-y-2 font-medium">
         <li>
-            <a class="flex items-center p-2 text-gray-900 rounded-lg dark:text-app-white dark:bg-eerie-black group" 
-                style="border-bottom-width: 1px; margin-bottom: 25px;"> 
-               <span class="ms-3">Hello, <strong><u><?php echo ucfirst($username) ?></u>-!</strong></span>
-           </a>
-
-        </li> 
-        <li>
-           <a href="./index.php" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-app-white dark:bg-gunmetal-2 group"> <svg class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-x group-hover:text-gray-900 dark:group-hover:text-app-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 21"> <path d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z"/>
+           <a href="./index.php" class="flex items-center p-3 text-app-white bg-citrine bg-opacity-20 rounded-lg group border border-citrine border-opacity-30">
+               <svg class="w-5 h-5 text-citrine" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 21">
+                   <path d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z"/>
                    <path d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z"/>
                </svg>
                <span class="ms-3">Dashboard</span>
            </a>
          </li>
          <li>
-           <button type="button" class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-app-white dark:hover:bg-gunmetal-2" aria-controls="dropdown-example" data-collapse-toggle="dropdown-example"> <svg class="shrink-0 w-5 h-5 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-x dark:group-hover:text-app-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
-  <path fill-rule="evenodd" d="M3 5.25a.75.75 0 0 1 .75-.75h16.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 5.25Zm0 4.5A.75.75 0 0 1 3.75 9h16.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 9.75Zm0 4.5a.75.75 0 0 1 .75-.75h16.5a.75.75 0 0 1 0 1.5H3.75a.75.75 0 0 1-.75-.75Zm0 4.5a.75.75 0 0 1 .75-.75h16.5a.75.75 0 0 1 0 1.5H3.75a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
-</svg>
-
-                 </svg>
-
-                 
-                 <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Data Management</span>
-                 <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-                 </svg>
+           <button type="button" class="flex items-center w-full p-3 text-base text-app-white transition duration-75 rounded-lg group hover:bg-gunmetal-1" aria-controls="dropdown-example" data-collapse-toggle="dropdown-example">
+               <svg class="w-5 h-5 text-gray-x group-hover:text-citrine" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                   <path fill-rule="evenodd" d="M3 5.25a.75.75 0 0 1 .75-.75h16.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 5.25Zm0 4.5A.75.75 0 0 1 3.75 9h16.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 9.75Zm0 4.5a.75.75 0 0 1 .75-.75h16.5a.75.75 0 0 1 0 1.5H3.75a.75.75 0 0 1-.75-.75Zm0 4.5a.75.75 0 0 1 .75-.75h16.5a.75.75 0 0 1 0 1.5H3.75a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
+               </svg>
+               <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Data Management</span>
+               <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                   <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+               </svg>
            </button>
            <ul id="dropdown-example" class="hidden py-2 space-y-2">
-                     <li>
-                       <a href="./movie.php" class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-app-white dark:hover:bg-gunmetal-2">Movie</a> </li>
-                     <li>
-                       <a href="./tv.php" class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-app-white dark:hover:bg-gunmetal-2">TV Show</a> </li>
-                     <li>
-                       <a href="./user.php" class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-app-white dark:hover:bg-gunmetal-2">User</a> </li>
+               <li>
+                   <a href="./movie.php" class="flex items-center w-full p-2 text-app-white transition duration-75 rounded-lg pl-11 group hover:bg-gunmetal-1 hover:text-citrine">
+                       <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                           <path d="M2 6a2 2 0 012-2h6l2 2h6a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"/>
+                       </svg>
+                       Movies
+                   </a>
+               </li>
+               <li>
+                   <a href="./tv.php" class="flex items-center w-full p-2 text-app-white transition duration-75 rounded-lg pl-11 group hover:bg-gunmetal-1 hover:text-citrine">
+                       <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                           <path d="M2 6a2 2 0 012-2h6l2 2h6a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"/>
+                       </svg>
+                       TV Shows
+                   </a>
+               </li>
+               <li>
+                   <a href="./user.php" class="flex items-center w-full p-2 text-app-white transition duration-75 rounded-lg pl-11 group hover:bg-gunmetal-1 hover:text-citrine">
+                       <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                           <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                       </svg>
+                       Users
+                   </a>
+               </li>
            </ul>
          </li>
-
-        <li>
-           <a href="./log.php" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-app-white hover:bg-gray-100 dark:hover:bg-gunmetal-2 group"> 
-            
-           <svg  class="shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-x group-hover:text-gray-900 dark:group-hover:text-app-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
-            <path fill-rule="evenodd" d="M4.125 3C3.089 3 2.25 3.84 2.25 4.875V18a3 3 0 0 0 3 3h15a3 3 0 0 1-3-3V4.875C17.25 3.839 16.41 3 15.375 3H4.125ZM12 9.75a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5H12Zm-.75-2.25a.75.75 0 0 1 .75-.75h1.5a.75.75 0 0 1 0 1.5H12a.75.75 0 0 1-.75-.75ZM6 12.75a.75.75 0 0 0 0 1.5h7.5a.75.75 0 0 0 0-1.5H6Zm-.75 3.75a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5H6a.75.75 0 0 1-.75-.75ZM6 6.75a.75.75 0 0 0-.75.75v3c0 .414.336.75.75.75h3a.75.75 0 0 0 .75-.75v-3A.75.75 0 0 0 9 6.75H6Z" clip-rule="evenodd" />
-            <path d="M18.75 6.75h1.875c.621 0 1.125.504 1.125 1.125V18a1.5 1.5 0 0 1-3 0V6.75Z" />
-            </svg>
-               <span class="flex-1 ms-3 whitespace-nowrap">Log</span> </a>
+         <li>
+           <a href="./log.php" class="flex items-center p-3 text-app-white rounded-lg hover:bg-gunmetal-1 group">
+               <svg class="w-5 h-5 text-gray-x group-hover:text-citrine" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                   <path fill-rule="evenodd" d="M4.125 3C3.089 3 2.25 3.84 2.25 4.875V18a3 3 0 0 0 3 3h15a3 3 0 0 1-3-3V4.875C17.25 3.839 16.41 3 15.375 3H4.125ZM12 9.75a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5H12Zm-.75-2.25a.75.75 0 0 1 .75-.75h1.5a.75.75 0 0 1 0 1.5H12a.75.75 0 0 1-.75-.75ZM6 12.75a.75.75 0 0 0 0 1.5h7.5a.75.75 0 0 0 0-1.5H6Zm-.75 3.75a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5H6a.75.75 0 0 1-.75-.75ZM6 6.75a.75.75 0 0 0-.75.75v3c0 .414.336.75.75.75h3a.75.75 0 0 0 .75-.75v-3A.75.75 0 0 0 9 6.75H6Z" clip-rule="evenodd" />
+                   <path d="M18.75 6.75h1.875c.621 0 1.125.504 1.125 1.125V18a1.5 1.5 0 0 1-3 0V6.75Z" />
+               </svg>
+               <span class="flex-1 ms-3 whitespace-nowrap">Activity Log</span>
+           </a>
          </li>
          <li>
-           <a href="../Auth/logout.php" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-app-white hover:bg-gray-100 dark:hover:bg-gunmetal-2 group"> <svg class="shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-x group-hover:text-gray-900 dark:group-hover:text-app-white" aria-hidden="true"xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
-            <path fill-rule="evenodd" d="M16.5 3.75a1.5 1.5 0 0 1 1.5 1.5v13.5a1.5 1.5 0 0 1-1.5 1.5h-6a1.5 1.5 0 0 1-1.5-1.5V15a.75.75 0 0 0-1.5 0v3.75a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V5.25a3 3 0 0 0-3-3h-6a3 3 0 0 0-3 3V9A.75.75 0 1 0 9 9V5.25a1.5 1.5 0 0 1 1.5-1.5h6ZM5.78 8.47a.75.75 0 0 0-1.06 0l-3 3a.75.75 0 0 0 0 1.06l3 3a.75.75 0 0 0 1.06-1.06l-1.72-1.72H15a.75.75 0 0 0 0-1.5H4.06l1.72-1.72a.75.75 0 0 0 0-1.06Z" clip-rule="evenodd" />
-            </svg>
-
-            </svg>
-
-               <span class="flex-1 ms-3 whitespace-nowrap">Log Out</span>
+           <a href="../Auth/logout.php" class="flex items-center p-3 text-app-white rounded-lg hover:bg-red-600 group">
+               <svg class="w-5 h-5 text-gray-x group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                   <path fill-rule="evenodd" d="M16.5 3.75a1.5 1.5 0 0 1 1.5 1.5v13.5a1.5 1.5 0 0 1-1.5 1.5h-6a1.5 1.5 0 0 1-1.5-1.5V15a.75.75 0 0 0-1.5 0v3.75a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V5.25a3 3 0 0 0-3-3h-6a3 3 0 0 0-3 3V9A.75.75 0 1 0 9 9V5.25a1.5 1.5 0 0 1 1.5-1.5h6ZM5.78 8.47a.75.75 0 0 0-1.06 0l-3 3a.75.75 0 0 0 0 1.06l3 3a.75.75 0 0 0 1.06-1.06l-1.72-1.72H15a.75.75 0 0 0 0-1.5H4.06l1.72-1.72a.75.75 0 0 0 0-1.06Z" clip-rule="evenodd" />
+               </svg>
+               <span class="flex-1 ms-3 whitespace-nowrap">Logout</span>
            </a>
          </li>
      </ul>
    </div>
 </aside>
 
-<div class="p-4 sm:ml-64 bg-rich-black-fogra-39 px-20 py-10">
+<!-- Main content -->
+<div class="p-4 sm:ml-64 bg-rich-black-fogra-39 min-h-screen">
+    <div class="px-6 py-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold text-app-white mb-2">Dashboard Overview</h1>
+                    <p class="text-gray-400">Welcome back, <?php echo ucfirst($username); ?>! Here's what's happening with Frame X.</p>
+                </div>
+                <div class="hidden md:flex items-center space-x-4">
+                    <div class="text-right">
+                        <p class="text-sm text-gray-400">Current Time</p>
+                        <p class="text-app-white font-semibold" id="current-time"></p>
+                    </div>
+                    <div class="w-12 h-12 bg-gradient-to-br from-citrine to-yellow-500 rounded-full flex items-center justify-center">
+                        <span class="text-black font-bold text-lg"><?php echo strtoupper(substr($username, 0, 1)); ?></span>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-<div class="title-wrapper" style="padding-bottom:20px;">
-    <h2 class="h2 section-title" style="text-align:left;"><strong>Dashboard</strong></h2>
+        <!-- Statistics Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <!-- Movies Card -->
+            <div class="stat-card rounded-xl p-6 transition-all duration-300">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-400 text-sm font-medium">Total Movies</p>
+                        <p class="text-2xl font-bold text-app-white"><?php echo number_format($total_movies, 0, ',', '.'); ?></p>
+                        <p class="text-citrine text-sm mt-1">+<?php echo number_format($countcustom, 0, ',', '.'); ?> custom</p>
+                    </div>
+                    <div class="w-12 h-12 bg-gradient-to-br from-red-500 to-pink-600 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M2 6a2 2 0 012-2h6l2 2h6a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TV Shows Card -->
+            <div class="stat-card rounded-xl p-6 transition-all duration-300">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-400 text-sm font-medium">Total TV Shows</p>
+                        <p class="text-2xl font-bold text-app-white"><?php echo number_format($total_tvshow, 0, ',', '.'); ?></p>
+                        <p class="text-citrine text-sm mt-1">+<?php echo number_format($countcustomtv, 0, ',', '.'); ?> custom</p>
+                    </div>
+                    <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users Card -->
+            <div class="stat-card rounded-xl p-6 transition-all duration-300">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-400 text-sm font-medium">Total Users</p>
+                        <p class="text-2xl font-bold text-app-white"><?php echo number_format($total_users, 0, ',', '.'); ?></p>
+                        <p class="text-citrine text-sm mt-1"><?php echo $countuser; ?> regular users</p>
+                    </div>
+                    <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-teal-600 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admins Card -->
+            <div class="stat-card rounded-xl p-6 transition-all duration-300">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-400 text-sm font-medium">Administrators</p>
+                        <p class="text-2xl font-bold text-app-white"><?php echo $countadmin; ?></p>
+                        <p class="text-citrine text-sm mt-1">System managers</p>
+                    </div>
+                    <div class="w-12 h-12 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="mb-8">
+            <h3 class="text-lg font-semibold text-app-white mb-4">Quick Actions</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <a href="./movie.php" class="stat-card rounded-xl p-6 hover:bg-gunmetal-1 transition-all duration-300 group">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-gradient-to-br from-red-500 to-pink-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M2 6a2 2 0 012-2h6l2 2h6a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="font-semibold text-app-white">Manage Movies</p>
+                            <p class="text-sm text-gray-400">Add, edit, delete movies</p>
+                        </div>
+                    </div>
+                </a>
+                
+                <a href="./tv.php" class="stat-card rounded-xl p-6 hover:bg-gunmetal-1 transition-all duration-300 group">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="font-semibold text-app-white">Manage TV Shows</p>
+                            <p class="text-sm text-gray-400">Add, edit, delete TV shows</p>
+                        </div>
+                    </div>
+                </a>
+                
+                <a href="./user.php" class="stat-card rounded-xl p-6 hover:bg-gunmetal-1 transition-all duration-300 group">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-teal-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="font-semibold text-app-white">Manage Users</p>
+                            <p class="text-sm text-gray-400">User management & roles</p>
+                        </div>
+                    </div>
+                </a>
+                
+                <a href="./log.php" class="stat-card rounded-xl p-6 hover:bg-gunmetal-1 transition-all duration-300 group">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M4.125 3C3.089 3 2.25 3.84 2.25 4.875V18a3 3 0 0 0 3 3h15a3 3 0 0 1-3-3V4.875C17.25 3.839 16.41 3 15.375 3H4.125ZM12 9.75a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5H12Zm-.75-2.25a.75.75 0 0 1 .75-.75h1.5a.75.75 0 0 1 0 1.5H12a.75.75 0 0 1-.75-.75ZM6 12.75a.75.75 0 0 0 0 1.5h7.5a.75.75 0 0 0 0-1.5H6Zm-.75 3.75a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5H6a.75.75 0 0 1-.75-.75ZM6 6.75a.75.75 0 0 0-.75.75v3c0 .414.336.75.75.75h3a.75.75 0 0 0 .75-.75v-3A.75.75 0 0 0 9 6.75H6Z" clip-rule="evenodd" />
+                                <path d="M18.75 6.75h1.875c.621 0 1.125.504 1.125 1.125V18a1.5 1.5 0 0 1-3 0V6.75Z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="font-semibold text-app-white">View Logs</p>
+                            <p class="text-sm text-gray-400">System activity logs</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Charts and Recent Activity Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <!-- Chart Section -->
+            <div class="lg:col-span-2">
+                <div class="stat-card rounded-xl p-6">
+                    <h3 class="text-lg font-semibold text-app-white mb-4">Content Distribution</h3>
+                    <div class="h-64">
+                        <canvas id="contentChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="stat-card rounded-xl p-6">
+                <h3 class="text-lg font-semibold text-app-white mb-4">Recent Activity</h3>
+                <div class="space-y-4">
+                    <?php if (!empty($recent_activities)): ?>
+                        <?php foreach ($recent_activities as $activity): ?>
+                            <div class="activity-item p-3 rounded-lg border border-gray-700">
+                                <div class="flex items-start space-x-3">
+                                    <div class="w-2 h-2 bg-citrine rounded-full mt-2"></div>
+                                    <div class="flex-1">
+                                        <p class="text-sm text-app-white"><?php echo htmlspecialchars($activity['action'] ?? 'Activity'); ?></p>
+                                        <p class="text-xs text-gray-400"><?php echo htmlspecialchars($activity['created_at'] ?? 'Recently'); ?></p>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <div class="text-center py-8">
+                            <svg class="w-12 h-12 text-gray-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                            <p class="text-gray-400 text-sm">No recent activities</p>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Content Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Recent Movies -->
+            <div class="stat-card rounded-xl p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold text-app-white">Recent Movies</h3>
+                    <a href="./movie.php" class="text-citrine hover:text-citrine-hover text-sm">View all</a>
+                </div>
+                <div class="space-y-3">
+                    <?php if (!empty($recent_movies)): ?>
+                        <?php foreach ($recent_movies as $movie): ?>
+                            <div class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gunmetal-1 transition-colors">
+                                <div class="w-10 h-10 bg-gradient-to-br from-red-500 to-pink-600 rounded-lg flex items-center justify-center">
+                                    <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M2 6a2 2 0 012-2h6l2 2h6a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"/>
+                                    </svg>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm font-medium text-app-white"><?php echo htmlspecialchars($movie['title'] ?? 'Unknown Movie'); ?></p>
+                                    <p class="text-xs text-gray-400">Added recently</p>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <div class="text-center py-8">
+                            <p class="text-gray-400 text-sm">No recent movies</p>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <!-- Recent TV Shows -->
+            <div class="stat-card rounded-xl p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold text-app-white">Recent TV Shows</h3>
+                    <a href="./tv.php" class="text-citrine hover:text-citrine-hover text-sm">View all</a>
+                </div>
+                <div class="space-y-3">
+                    <?php if (!empty($recent_tvshows)): ?>
+                        <?php foreach ($recent_tvshows as $tvshow): ?>
+                            <div class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gunmetal-1 transition-colors">
+                                <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                                    <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+                                    </svg>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm font-medium text-app-white"><?php echo htmlspecialchars($tvshow['title'] ?? 'Unknown TV Show'); ?></p>
+                                    <p class="text-xs text-gray-400">Added recently</p>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <div class="text-center py-8">
+                            <p class="text-gray-400 text-sm">No recent TV shows</p>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-        <thead class="text-xs text-gray-700 uppercase dark:bg-light-gray dark:text-black">
-            <tr>
-                <th scope="col" class="px-6 py-3">
-                    Category
-                </th>
-                <th scope="col" class="px-6 py-4">
-                    Total Items
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr class="bg-white border-b bg-gray-50 dark:bg-eerie-black dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 font-poppins">
-                <?php ?>
-                <th scope="row" class="px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
-                    Movies
-                </th>
-                <td class="px-6 py-4 text-white">
-                    <?php 
-                    $total_movies = $discover_movie->total_results + $countcustom;
-                    echo htmlspecialchars(number_format($total_movies,0,',','.')) ?>
-                </td>
-            </tr>
-            <tr class="bg-white border-b bg-gray-50 dark:bg-eerie-black dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    TV Show
-                </th>
-                <td class="px-6 py-4 text-white">
-                    <?php  $total_tvshow = $discover_tv->total_results + $countcustomtv;
-                    echo htmlspecialchars(number_format($total_tvshow,0,',','.')) ?>
-                </td>
-            </tr>
-            <tr class="bg-white border-b bg-gray-50 dark:bg-eerie-black dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    User
-                </th>
-                <td class="px-6 py-4 text-white">
-                    <?php echo $countuser?>
-                </td>
-            </tr>
-            <tr class="bg-white border-b bg-gray-50 dark:bg-eerie-black dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    Admin
-                </th>
-                <td class="px-6 py-4 text-white">
-                    <?php echo $countadmin ?>
-                </td>
-             </tr>
-        </tbody>
-    </table>
-</div>
+<script>
+// Update current time
+function updateTime() {
+    const now = new Date();
+    const timeString = now.toLocaleTimeString('en-US', {
+        hour12: false,
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+    });
+    document.getElementById('current-time').textContent = timeString;
+}
 
-</div>
+// Update time every second
+setInterval(updateTime, 1000);
+updateTime(); // Initial call
+
+// Chart.js configuration
+const ctx = document.getElementById('contentChart').getContext('2d');
+const contentChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+        labels: ['Movies', 'TV Shows', 'Users', 'Admins'],
+        datasets: [{
+            data: [
+                <?php echo $total_movies; ?>,
+                <?php echo $total_tvshow; ?>,
+                <?php echo $countuser; ?>,
+                <?php echo $countadmin; ?>
+            ],
+            backgroundColor: [
+                'rgba(239, 68, 68, 0.8)',
+                'rgba(59, 130, 246, 0.8)',
+                'rgba(34, 197, 94, 0.8)',
+                'rgba(245, 158, 11, 0.8)'
+            ],
+            borderColor: [
+                'rgba(239, 68, 68, 1)',
+                'rgba(59, 130, 246, 1)',
+                'rgba(34, 197, 94, 1)',
+                'rgba(245, 158, 11, 1)'
+            ],
+            borderWidth: 2
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'bottom',
+                labels: {
+                    color: '#ffffff',
+                    font: {
+                        family: 'Poppins',
+                        size: 12
+                    }
+                }
+            }
+        }
+    }
+});
+
+// Add hover effects to stat cards
+document.addEventListener('DOMContentLoaded', function() {
+    const statCards = document.querySelectorAll('.stat-card');
+    statCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px)';
+        });
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
+    });
+});
+</script>
 
 </body>
 </html>

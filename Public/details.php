@@ -456,88 +456,294 @@ if (isset($movie_similar_id->results) && is_array($movie_similar_id->results) &&
   </main>
 
 
-<div id="tvShowListModal" class="fixed inset-0 z-50 hidden bg-black/30 backdrop-blur-sm flex items-center justify-center p-4">
-    <section class="bg-white dark:bg-gray-900 rounded-lg w-full max-w-md max-h-[90vh] overflow-y-auto">
-        <div class="py-8 px-8 mx-auto bg-eerie-black">
-            <h2 class="mb-6 text-2xl font-bold text-gray-900 dark:text-white" id="modalTitle">Add TV Show to My List</h2>
-            <form id="tvShowListForm" action="save_tv_to_list.php" method="POST">
+<div id="tvShowListModal" class="fixed inset-0 z-50 hidden bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 transition-all duration-300">
+    <div class="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl w-full max-w-md max-h-[90vh] overflow-y-auto shadow-2xl border border-gray-700 transform transition-all duration-300 scale-95 opacity-0" id="tvModalContent">
+        <div class="p-8">
+            <!-- Header -->
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-white" id="modalTitle">
+                    <ion-icon name="tv" class="inline-block mr-2 text-citrine"></ion-icon>
+                    Add TV Show to My List
+                </h2>
+                <button onclick="closeTvShowListModal()" class="text-gray-400 hover:text-white transition-colors duration-200">
+                    <ion-icon name="close" class="text-2xl"></ion-icon>
+                </button>
+            </div>
+
+            <!-- Form -->
+            <form id="tvShowListForm" action="save_tv_to_list.php" method="POST" class="space-y-6">
                 <input type="hidden" name="tv_show_id" id="modalTvShowId">
                 <input type="hidden" name="action" id="modalAction">
 
-                <div class="grid gap-4">
+                <!-- Status Selection -->
+                <div class="space-y-3">
+                    <label class="block text-sm font-semibold text-gray-300 mb-3">
+                        <ion-icon name="flag" class="inline-block mr-2 text-citrine"></ion-icon>
+                        Watch Status
+                    </label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <label class="status-option">
+                            <input type="radio" name="status" value="plan to watch" class="hidden">
+                            <div class="status-card">
+                                <ion-icon name="time" class="text-orange-400"></ion-icon>
+                                <span>Plan to Watch</span>
+                            </div>
+                        </label>
+                        <label class="status-option">
+                            <input type="radio" name="status" value="watching" class="hidden">
+                            <div class="status-card">
+                                <ion-icon name="play-circle" class="text-green-400"></ion-icon>
+                                <span>Watching</span>
+                            </div>
+                        </label>
+                        <label class="status-option">
+                            <input type="radio" name="status" value="completed" class="hidden">
+                            <div class="status-card">
+                                <ion-icon name="checkmark-circle" class="text-blue-400"></ion-icon>
+                                <span>Completed</span>
+                            </div>
+                        </label>
+                        <label class="status-option">
+                            <input type="radio" name="status" value="on-hold" class="hidden">
+                            <div class="status-card">
+                                <ion-icon name="pause-circle" class="text-purple-400"></ion-icon>
+                                <span>On-Hold</span>
+                            </div>
+                        </label>
+                        <label class="status-option">
+                            <input type="radio" name="status" value="dropped" class="hidden">
+                            <div class="status-card">
+                                <ion-icon name="close-circle" class="text-red-400"></ion-icon>
+                                <span>Dropped</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Progress Tracking -->
+                <div class="space-y-4">
                     <div>
-                        <label for="list_status" class="block mb-2 text-sm font-medium text-white">Status</label>
-                        <select name="status" id="list_status" required
-                            class="w-full p-3 border border-gray-300 rounded-lg dark:bg-app-white  dark:border-gray-600">
-                            <option value="plan to watch">Plan to Watch</option>
-                            <option value="watching">Watching</option>
-                            <option value="completed">Completed</option>
-                            <option value="on-hold">On-Hold</option>
-                            <option value="dropped">Dropped</option>
-                        </select>
+                        <label for="current_episode" class="block text-sm font-semibold text-gray-300 mb-2">
+                            <ion-icon name="albums" class="inline-block mr-2 text-citrine"></ion-icon>
+                            Current Episode <span id="totalEpisodesInfo" class="text-gray-400 text-xs"></span>
+                        </label>
+                        <div class="relative">
+                            <input type="number" name="current_episode" id="current_episode" min="0" value="0"
+                                class="w-full p-3 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:border-citrine focus:ring-2 focus:ring-citrine/20 transition-all duration-200">
+                            <div class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                                <ion-icon name="chevron-up-down"></ion-icon>
+                            </div>
+                        </div>
                     </div>
 
                     <div>
-                        <label for="current_episode" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Current Episode <span id="totalEpisodesInfo"></span></label>
-                        <input type="number" name="current_episode" id="current_episode" min="0" value="0"
-                            class="w-full p-3 border border-gray-300 rounded-lg dark:bg-app-white dark:border-gray-600">
+                        <label for="current_season" class="block text-sm font-semibold text-gray-300 mb-2">
+                            <ion-icon name="layers" class="inline-block mr-2 text-citrine"></ion-icon>
+                            Current Season <span id="totalSeasonsInfo" class="text-gray-400 text-xs"></span>
+                        </label>
+                        <div class="relative">
+                            <input type="number" name="current_season" id="current_season" min="0" value="0"
+                                class="w-full p-3 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:border-citrine focus:ring-2 focus:ring-citrine/20 transition-all duration-200">
+                            <div class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                                <ion-icon name="chevron-up-down"></ion-icon>
+                            </div>
+                        </div>
                     </div>
+                </div>
 
-                    <div>
-                        <label for="current_season" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Current Season <span id="totalSeasonsInfo"></span></label>
-                        <input type="number" name="current_season" id="current_season" min="0" value="0"
-                            class="w-full p-3 border border-gray-300 rounded-lg dark:bg-app-white dark:border-gray-600">
-                    </div>
-
-                    <div class="flex justify-between mt-6">
-                        <button type="button" onclick="closeTvShowListModal()" class="px-6 py-3 text-sm font-medium text-black bg-gray-300 rounded-lg hover:bg-gray-400 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-600">
-                            Cancel
-                        </button>
-                        <button type="submit" class="px-6 py-3 text-sm font-medium text-white bg-yellow rounded-lg hover:bg-citrine-hover focus:ring-4 focus:ring-citrine">
-                            Save to List
-                        </button>
-                    </div>
+                <!-- Action Buttons -->
+                <div class="flex gap-3 pt-4">
+                    <button type="button" onclick="closeTvShowListModal()" 
+                        class="flex-1 px-6 py-3 text-sm font-medium text-gray-300 bg-gray-700 rounded-lg hover:bg-gray-600 focus:ring-2 focus:ring-gray-500 transition-all duration-200">     
+                        Cancel
+                    </button>
+                    <button type="submit" 
+                        class="flex-1 px-6 py-3 text-sm font-medium text-black bg-white rounded-lg hover:bg-yellow-400 focus:ring-2 focus:ring-citrine transition-all duration-200 transform hover:scale-105">
+                        Save to List
+                    </button>
                 </div>
             </form>
         </div>
-    </section>
+    </div>
 </div>
 
-<div id="movieListModal" class="fixed inset-0 z-50 hidden bg-black/30 backdrop-blur-sm flex items-center justify-center p-4">
-    <section class="bg-white dark:bg-gray-900 rounded-lg w-full max-w-md max-h-[90vh] overflow-y-auto">
-        <div class="py-8 px-8 mx-auto bg-eerie-black">
-            <h2 class="mb-6 text-2xl font-bold text-gray-900 dark:text-white" id="movieModalTitle">Add Movie to My List</h2>
-            <form id="movieListForm" action="save_movie_to_list.php" method="POST">
+<div id="movieListModal" class="fixed inset-0 z-50 hidden bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 transition-all duration-300">
+    <div class="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl w-full max-w-md max-h-[90vh] overflow-y-auto shadow-2xl border border-gray-700 transform transition-all duration-300 scale-95 opacity-0" id="movieModalContent">
+        <div class="p-8">
+            <!-- Header -->
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-white" id="movieModalTitle">
+                    <ion-icon name="film" class="inline-block mr-2 text-citrine"></ion-icon>
+                    Add Movie to My List
+                </h2>
+                <button onclick="closeMovieListModal()" class="text-gray-400 hover:text-white transition-colors duration-200">
+                    <ion-icon name="close" class="text-2xl"></ion-icon>
+                </button>
+            </div>
+
+            <!-- Form -->
+            <form id="movieListForm" action="save_movie_to_list.php" method="POST" class="space-y-6">
                 <input type="hidden" name="movie_id" id="modalMovieId">
                 <input type="hidden" name="movie_type" id="modalMovieType">
                 <input type="hidden" name="action" id="modalMovieAction">
 
-                <div class="grid gap-4">
-                    <div>
-                        <label for="movie_list_status" class="block mb-2 text-sm font-medium text-white">Status</label>
-                        <select name="status" id="movie_list_status" required
-                            class="w-full p-3 border border-gray-300 rounded-lg bg-white border-gray-600">
-                            <option value="plan to watch">Plan to Watch</option>
-                            <option value="watching">Watching</option>
-                            <option value="ended">Ended</option>
-                            <option value="dropped">Dropped</option>
-                            <option value="on-hold">On-Hold</option>
-                        </select>
+                <!-- Status Selection -->
+                <div class="space-y-3">
+                    <label class="block text-sm font-semibold text-gray-300 mb-3">
+                        <ion-icon name="flag" class="inline-block mr-2 text-citrine"></ion-icon>
+                        Watch Status
+                    </label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <label class="status-option">
+                            <input type="radio" name="status" value="plan to watch" class="hidden">
+                            <div class="status-card">
+                                <ion-icon name="time" class="text-orange-400"></ion-icon>
+                                <span>Plan to Watch</span>
+                            </div>
+                        </label>
+                        <label class="status-option">
+                            <input type="radio" name="status" value="watching" class="hidden">
+                            <div class="status-card">
+                                <ion-icon name="play-circle" class="text-green-400"></ion-icon>
+                                <span>Watching</span>
+                            </div>
+                        </label>
+                        <label class="status-option">
+                            <input type="radio" name="status" value="ended" class="hidden">
+                            <div class="status-card">
+                                <ion-icon name="checkmark-circle" class="text-blue-400"></ion-icon>
+                                <span>Completed</span>
+                            </div>
+                        </label>
+                        <label class="status-option">
+                            <input type="radio" name="status" value="on-hold" class="hidden">
+                            <div class="status-card">
+                                <ion-icon name="pause-circle" class="text-purple-400"></ion-icon>
+                                <span>On-Hold</span>
+                            </div>
+                        </label>
+                        <label class="status-option">
+                            <input type="radio" name="status" value="dropped" class="hidden">
+                            <div class="status-card">
+                                <ion-icon name="close-circle" class="text-red-400"></ion-icon>
+                                <span>Dropped</span>
+                            </div>
+                        </label>
                     </div>
+                </div>
 
-                    <div class="flex justify-between mt-6">
-                        <button type="button" onclick="closeMovieListModal()" class="px-6 py-3 text-sm font-medium text-black bg-gray-300 rounded-lg hover:bg-gray-400 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-600">
-                            Cancel
-                        </button>
-                        <button type="submit" class="px-6 py-3 text-sm font-medium text-white bg-citrine dark:bg-citrine rounded-lg hover:bg-citrine-hover focus:ring-4 focus:ring-citrine">
-                            Save to List
-                        </button>
-                    </div>
+                <!-- Action Buttons -->
+                <div class="flex gap-3 pt-4">
+                    <button type="button" onclick="closeMovieListModal()" 
+                        class="flex-1 px-6 py-3 text-sm font-medium text-gray-300 bg-gray-700 rounded-lg hover:bg-gray-600 focus:ring-2 focus:ring-gray-500 transition-all duration-200">
+                        Cancel
+                    </button>
+                    <button type="submit" 
+                        class="flex-1 px-6 py-3 text-sm font-medium text-black bg-white rounded-lg hover:bg-yellow-400 focus:ring-2 focus:ring-citrine transition-all duration-200 transform hover:scale-105">
+                        Save to List
+                    </button>
                 </div>
             </form>
         </div>
-    </section>
+    </div>
 </div>
+
+<style>
+/* Modal Styles */
+.status-option {
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.status-option:hover .status-card {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+}
+
+.status-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background: rgba(255,255,255,0.05);
+    border: 2px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    transition: all 0.2s ease;
+    text-align: center;
+    min-height: 80px;
+}
+
+.status-card ion-icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.status-card span {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #e5e7eb;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Radio button styling */
+.status-option input[type="radio"]:checked + .status-card {
+    border-color: var(--citrine);
+    background: rgba(255, 215, 0, 0.1);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+}
+
+.status-option input[type="radio"]:checked + .status-card span {
+    color: var(--citrine);
+}
+
+/* Modal animations */
+.modal-open {
+    animation: modalOpen 0.3s ease-out forwards;
+}
+
+.modal-close {
+    animation: modalClose 0.3s ease-in forwards;
+}
+
+@keyframes modalOpen {
+    from {
+        transform: scale(0.95);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes modalClose {
+    from {
+        transform: scale(1);
+        opacity: 1;
+    }
+    to {
+        transform: scale(0.95);
+        opacity: 0;
+    }
+}
+
+/* Input focus effects */
+input:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
+}
+
+/* Button hover effects */
+button:hover {
+    transform: translateY(-1px);
+}
+
+button:active {
+    transform: translateY(0);
+}
+</style>
 
 <?php include __DIR__ . './footer.php'; ?>
 
@@ -548,6 +754,9 @@ if (isset($movie_similar_id->results) && is_array($movie_similar_id->results) &&
 
 
 <script>
+    // Make functions globally accessible
+    let closeMovieListModal, openMovieListModal, closeTvShowListModal, openTvShowListModal;
+    
     document.addEventListener('DOMContentLoaded', function() {
         const saveToListBtn = document.getElementById('saveToListBtn');
         const removeFromListBtn = document.getElementById('removeFromListBtn');
@@ -572,18 +781,20 @@ if (isset($movie_similar_id->results) && is_array($movie_similar_id->results) &&
         const movieListStatus = document.getElementById('movie_list_status');
         const movieListForm = document.getElementById('movieListForm');
 
-        function openTvShowListModal(tvId, actionType, currentStatus, currentEp, currentSe, totalEp, totalSe) {
+        openTvShowListModal = function(tvId, actionType, currentStatus, currentEp, currentSe, totalEp, totalSe) {
             modalTvShowId.value = tvId;
             modalAction.value = actionType;
 
             if (actionType === 'add') {
-                modalTitle.textContent = 'Add TV Show to My List';
-                listStatus.value = currentStatus;
+                modalTitle.innerHTML = '<ion-icon name="tv" class="inline-block mr-2 text-citrine"></ion-icon>Add TV Show to My List';
+                // Set default status
+                document.querySelector('input[value="plan to watch"]').checked = true;
                 currentEpisode.value = 0;
                 currentSeason.value = 0;
             } else if (actionType === 'edit') {
-                modalTitle.textContent = 'Edit My List Entry';
-                listStatus.value = currentStatus;
+                modalTitle.innerHTML = '<ion-icon name="tv" class="inline-block mr-2 text-citrine"></ion-icon>Edit My List Entry';
+                // Set current status
+                document.querySelector(`input[value="${currentStatus}"]`).checked = true;
                 currentEpisode.value = currentEp;
                 currentSeason.value = currentSe;
             }
@@ -594,30 +805,60 @@ if (isset($movie_similar_id->results) && is_array($movie_similar_id->results) &&
             currentEpisode.max = totalEp;
             currentSeason.max = totalSe;
 
+            // Show modal with animation
             tvShowListModal.classList.remove('hidden');
+            setTimeout(() => {
+                document.getElementById('tvModalContent').classList.add('modal-open');
+            }, 10);
         }
 
-        function closeTvShowListModal() {
-            tvShowListModal.classList.add('hidden');
+        closeTvShowListModal = function() {
+            const modalContent = document.getElementById('tvModalContent');
+            modalContent.classList.remove('modal-open');
+            modalContent.classList.add('modal-close');
+            
+            setTimeout(() => {
+                tvShowListModal.classList.add('hidden');
+                modalContent.classList.remove('modal-close');
+            }, 300);
         }
 
-  function openMovieListModal(movieId, movieType, actionType, currentStatus) {
+        openMovieListModal = function(movieId, movieType, actionType, currentStatus) {
             modalMovieId.value = movieId;
             modalMovieType.value = movieType;
             modalMovieAction.value = actionType;
 
             if (actionType === 'add') {
-                movieModalTitle.textContent = 'Add Movie to My List';
-                movieListStatus.value = currentStatus;
+                movieModalTitle.innerHTML = '<ion-icon name="film" class="inline-block mr-2 text-citrine"></ion-icon>Add Movie to My List';
+                // Set default status
+                document.querySelector('#movieListForm input[value="plan to watch"]').checked = true;
             } else if (actionType === 'edit') {
-                movieModalTitle.textContent = 'Edit My List Entry';
-                movieListStatus.value = currentStatus;
+                movieModalTitle.innerHTML = '<ion-icon name="film" class="inline-block mr-2 text-citrine"></ion-icon>Edit My List Entry';
+                // Set current status
+                document.querySelector(`#movieListForm input[value="${currentStatus}"]`).checked = true;
             }
+            
+            // Show modal with animation
             movieListModal.classList.remove('hidden');
+            setTimeout(() => {
+                document.getElementById('movieModalContent').classList.add('modal-open');
+            }, 10);
         }
 
-        function closeMovieListModal() {
-            movieListModal.classList.add('hidden');
+        closeMovieListModal = function() {
+            const modalContent = document.getElementById('movieModalContent');
+            if (!modalContent) {
+                console.error('movieModalContent not found');
+                return;
+            }
+            
+            modalContent.classList.remove('modal-open');
+            modalContent.classList.add('modal-close');
+            
+            setTimeout(() => {
+                movieListModal.classList.add('hidden');
+                modalContent.classList.remove('modal-close');
+            }, 300);
         }
 
         if (saveToListBtn) {
@@ -700,8 +941,64 @@ if (isset($movie_similar_id->results) && is_array($movie_similar_id->results) &&
             });
         }
 
+
+
+        // Close modals when clicking outside
+        tvShowListModal.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeTvShowListModal();
+            }
+        });
+
+        movieListModal.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeMovieListModal();
+            }
+        });
+
+        // Close modals with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                if (!tvShowListModal.classList.contains('hidden')) {
+                    closeTvShowListModal();
+                }
+                if (!movieListModal.classList.contains('hidden')) {
+                    closeMovieListModal();
+                }
+            }
+        });
+
+        // Add visual feedback for status selection
+        document.querySelectorAll('.status-option').forEach(option => {
+            option.addEventListener('click', function() {
+                // Remove active class from all options in the same form
+                const form = this.closest('form');
+                form.querySelectorAll('.status-option').forEach(opt => {
+                    opt.classList.remove('active');
+                });
+                // Add active class to clicked option
+                this.classList.add('active');
+            });
+        });
+
+        // Add loading states to submit buttons
+        function setLoadingState(form, isLoading) {
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            
+            if (isLoading) {
+                submitBtn.innerHTML = '<ion-icon name="hourglass" class="animate-spin mr-2"></ion-icon>Saving...';
+                submitBtn.disabled = true;
+            } else {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        }
+
+        // Enhanced form submission with loading states
         tvShowListForm.addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent default form submission
+            event.preventDefault();
+            setLoadingState(this, true);
 
             const formData = new FormData(this);
             const params = new URLSearchParams(formData);
@@ -712,23 +1009,26 @@ if (isset($movie_similar_id->results) && is_array($movie_similar_id->results) &&
             })
             .then(response => response.json())
             .then(data => {
+                setLoadingState(this, false);
                 if (data.success) {
-                    alert(data.message);
+                    // Show success message with better styling
+                    showNotification(data.message, 'success');
                     closeTvShowListModal();
-                    location.reload(); // Reload page to update button state and profile list
+                    setTimeout(() => location.reload(), 1000);
                 } else {
-                    alert('Error: ' + data.message);
+                    showNotification('Error: ' + data.message, 'error');
                 }
             })
             .catch(error => {
+                setLoadingState(this, false);
                 console.error('Error:', error);
-                alert('An unexpected error occurred.');
+                showNotification('An unexpected error occurred.', 'error');
             });
         });
 
-        // Handle Movie modal form submission
         movieListForm.addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent default form submission
+            event.preventDefault();
+            setLoadingState(this, true);
 
             const formData = new FormData(this);
             const params = new URLSearchParams(formData);
@@ -739,19 +1039,52 @@ if (isset($movie_similar_id->results) && is_array($movie_similar_id->results) &&
             })
             .then(response => response.json())
             .then(data => {
+                setLoadingState(this, false);
                 if (data.success) {
-                    alert(data.message);
+                    showNotification(data.message, 'success');
                     closeMovieListModal();
-                    location.reload(); // Reload page to update button state and profile list
+                    setTimeout(() => location.reload(), 1000);
                 } else {
-                    alert('Error: ' + data.message);
+                    showNotification('Error: ' + data.message, 'error');
                 }
             })
             .catch(error => {
+                setLoadingState(this, false);
                 console.error('Error:', error);
-                alert('An unexpected error occurred.');
+                showNotification('An unexpected error occurred.', 'error');
             });
         });
+
+        // Custom notification function
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg transform transition-all duration-300 translate-x-full`;
+            
+            const bgColor = type === 'success' ? 'bg-green-500' : type === 'error' ? 'bg-red-500' : 'bg-blue-500';
+            const icon = type === 'success' ? 'checkmark-circle' : type === 'error' ? 'close-circle' : 'information-circle';
+            
+            notification.innerHTML = `
+                <div class="flex items-center ${bgColor} text-white p-3 rounded-lg">
+                    <ion-icon name="${icon}" class="mr-2 text-xl"></ion-icon>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Animate in
+            setTimeout(() => {
+                notification.classList.remove('translate-x-full');
+            }, 100);
+            
+            // Auto remove after 3 seconds
+            setTimeout(() => {
+                notification.classList.add('translate-x-full');
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
     });
 </script>
 

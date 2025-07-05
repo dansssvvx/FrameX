@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 01 Jul 2025 pada 05.56
+-- Waktu pembuatan: 05 Jul 2025 pada 20.25
 -- Versi server: 10.1.38-MariaDB
 -- Versi PHP: 7.3.3
 
@@ -21,6 +21,32 @@ SET time_zone = "+00:00";
 --
 -- Database: `framex`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `activity_log`
+--
+
+CREATE TABLE `activity_log` (
+  `id` int(11) NOT NULL,
+  `action` varchar(255) NOT NULL,
+  `description` text,
+  `user_id` int(11) DEFAULT NULL,
+  `user_type` enum('admin','user') DEFAULT 'admin',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data untuk tabel `activity_log`
+--
+
+INSERT INTO `activity_log` (`id`, `action`, `description`, `user_id`, `user_type`, `created_at`) VALUES
+(1, 'User Login', 'Admin logged in successfully', 2, 'admin', '2025-07-05 16:50:27'),
+(2, 'Movie Added', 'New custom movie \"Dit, geprek satu\" was added', 2, 'admin', '2025-07-05 15:50:27'),
+(3, 'TV Show Updated', 'TV show \"Kesultanan Bogor B -Series\" was updated', 2, 'admin', '2025-07-05 14:50:27'),
+(4, 'User Management', 'User permissions were updated', 2, 'admin', '2025-07-05 13:50:27'),
+(5, 'System Maintenance', 'Database backup completed', 2, 'admin', '2025-07-05 12:50:27');
 
 -- --------------------------------------------------------
 
@@ -49,7 +75,7 @@ INSERT INTO `custom_movie` (`id`, `title`, `overview`, `tagline`, `release_date`
 (2, 'Dit, geprek satu', 'Kisah ini berfokus pada seorang pria bernama Yoga, yang sering makan ayam geprek di warung milik Pak Adit.', 'Pak Adit, Gepreknya satu!', '2025-06-11', 'Released', 1234, 'https://instagram.com', 'https://picsum.photos/2000/3000?random=1', '2025-06-10 20:47:43'),
 (3, 'Kesultanan Bogor B', 'Tragedi dimulai saat isi WAG (WhatsApp Group) yang tidak sengaja kesebar.......', 'mok, mok, mok, moooook', '2025-06-11', 'Rumored', 0, 'https://whatsapp.com', 'https://picsum.photos/2000/3000?random=2', '2025-06-11 01:29:16'),
 (4, 'Semoga masih ada artinya', 'brief description the movie', 'Dari dapur kecil, menjadi besar', '2025-06-11', 'Planned', 0, 'https://facebook.com', 'https://picsum.photos/2000/3000?random=3', '2025-06-11 01:36:34'),
-(5, 'Absolute Cinema', 'ini deskripsi', 'popmie', '2025-06-12', 'Rumored', 0, 'https://ikn.go.id/', '../Assets/images/Cover/freaky.png', '2025-06-12 05:25:31');
+(5, 'Absolute Cinema', 'ini deskripsi', 'popmie', '2025-06-12', 'Rumored', 0, 'https://ikn.go.id/', 'https://picsum.photos/2000/3000?random=98', '2025-06-12 05:25:31');
 
 -- --------------------------------------------------------
 
@@ -259,7 +285,13 @@ INSERT INTO `log` (`id_log`, `isi_log`, `tanggal_log`, `id_user`) VALUES
 (95, 'user (user) berhasil login', '2025-06-29 15:28:17', 1),
 (96, 'user (user) berhasil login', '2025-07-01 11:16:23', 1),
 (97, 'user (user) berhasil logout', '2025-07-01 11:40:24', 1),
-(98, 'rama (admin) berhasil login', '2025-07-01 11:40:36', 2);
+(98, 'rama (admin) berhasil login', '2025-07-01 11:40:36', 2),
+(99, 'user (user) berhasil login', '2025-07-06 00:58:09', 1),
+(100, 'user (user) berhasil logout', '2025-07-06 01:38:26', 1),
+(101, 'rama (admin) berhasil login', '2025-07-06 01:38:45', 2),
+(102, 'rama (admin) Mengupdate Movie dengan ID 5: Absolute Cinema', '2025-07-06 02:04:29', 2),
+(103, 'rama (admin) berhasil logout', '2025-07-06 02:18:46', 2),
+(104, 'user (user) berhasil login', '2025-07-06 02:18:57', 1);
 
 -- --------------------------------------------------------
 
@@ -283,8 +315,8 @@ INSERT INTO `movie_genre` (`movie_id`, `genre_id`) VALUES
 (4, 10766),
 (4, 10767),
 (5, 10463),
-(5, 11450),
-(5, 11565);
+(5, 10759),
+(5, 11559);
 
 -- --------------------------------------------------------
 
@@ -351,6 +383,7 @@ CREATE TABLE `user_movies` (
 
 INSERT INTO `user_movies` (`user_id`, `movie_id`, `status`, `movie_type`, `added_at`) VALUES
 (1, 552524, 'Plan to Watch', 'api_movie', '2025-06-12 06:24:50'),
+(1, 986056, 'Watching', 'api_movie', '2025-07-05 17:12:42'),
 (1, 1087192, 'Plan to Watch', 'api_movie', '2025-06-12 01:08:30'),
 (1, 1233413, 'Watching', 'api_movie', '2025-06-12 06:03:08');
 
@@ -383,6 +416,14 @@ INSERT INTO `user_tv_list` (`user_id`, `tv_show_id`, `total_episodes`, `total_se
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indeks untuk tabel `activity_log`
+--
+ALTER TABLE `activity_log`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `created_at` (`created_at`);
 
 --
 -- Indeks untuk tabel `custom_movie`
@@ -448,6 +489,12 @@ ALTER TABLE `user_tv_list`
 --
 
 --
+-- AUTO_INCREMENT untuk tabel `activity_log`
+--
+ALTER TABLE `activity_log`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
 -- AUTO_INCREMENT untuk tabel `custom_movie`
 --
 ALTER TABLE `custom_movie`
@@ -463,7 +510,7 @@ ALTER TABLE `custom_tv_show`
 -- AUTO_INCREMENT untuk tabel `log`
 --
 ALTER TABLE `log`
-  MODIFY `id_log` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=99;
+  MODIFY `id_log` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=105;
 
 --
 -- AUTO_INCREMENT untuk tabel `users`

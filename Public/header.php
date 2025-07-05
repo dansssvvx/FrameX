@@ -9,21 +9,18 @@
 
       <div class="header-actions">
 
-        <button class="search-btn">
-          <ion-icon name="search-outline"></ion-icon>
-        </button>
-
-        <div class="lang-wrapper">
-          <label for="language">
-            <ion-icon name="globe-outline"></ion-icon>
-          </label>
-
-          <select name="language" id="language">
-            <option value="en">EN</option>
-            <option value="id">ID</option>
-          </select>
-        </div>
-
+        <!-- Search Form -->
+        <form class="search-form" action="./search.php" method="GET" style="display: flex; align-items: center; gap: 10px;">
+          <input type="text" name="q" placeholder="Search movies & TV shows..." 
+                 class="search-input" 
+                 style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); 
+                        color: white; padding: 8px 12px; border-radius: 5px; min-width: 200px;
+                        font-size: 14px;">
+          <button type="submit" class="search-btn" style="background: none; border: none; cursor: pointer;">
+            <ion-icon name="search-outline"></ion-icon>
+          </button>
+        </form>
+        
         <?php if (isset($_SESSION['user_logged_in'])): ?>
         <a href="./profile.php?id=<?php echo $_SESSION['user_id']?>" class="btn btn-primary"><?php echo $_SESSION['username'] ?></a>
         <a href="../Auth/logout.php" class="btn btn-primary">Log out</a>
@@ -62,11 +59,11 @@
           </li>
 
           <li>
-            <a href="./tvshow.php" class="navbar-link">Tv Show</a>
+            <a href="./tvshow.php" class="navbar-link">Tv</a>
           </li>
 
           <li>
-            <a href="./custommovie.php" class="navbar-link">Editor's Choice</a>
+            <a href="./custommovie.php" class="navbar-link">Custom</a>
           </li>
 
           <li>

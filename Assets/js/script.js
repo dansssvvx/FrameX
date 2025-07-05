@@ -148,3 +148,44 @@ function closeModal() { // This function seems to be for closing new TV show mod
     document.getElementById('tvshowmodal').classList.add('hidden');
 }
 
+// Search functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Add search form functionality
+    const searchForms = document.querySelectorAll('.search-form, .mobile-search-form');
+    
+    searchForms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            const searchInput = form.querySelector('input[name="q"]');
+            if (!searchInput.value.trim()) {
+                e.preventDefault();
+                searchInput.focus();
+                return false;
+            }
+        });
+    });
+
+    // Add search input focus effects
+    const searchInputs = document.querySelectorAll('.search-input, .mobile-search-input');
+    
+    searchInputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            this.parentElement.style.transform = 'scale(1.02)';
+        });
+        
+        input.addEventListener('blur', function() {
+            this.parentElement.style.transform = 'scale(1)';
+        });
+    });
+
+    // Add keyboard shortcuts for search
+    document.addEventListener('keydown', function(e) {
+        // Ctrl/Cmd + K to focus search
+        if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+            e.preventDefault();
+            const searchInput = document.querySelector('.search-input');
+            if (searchInput) {
+                searchInput.focus();
+            }
+        }
+    });
+});

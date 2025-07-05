@@ -21,11 +21,11 @@
             </li>
 
             <li>
-              <a href="./tvshow.php" class="footer-link">TV Show</a>
+              <a href="./tvshow.php" class="footer-link">TV</a>
             </li>
 
             <li>
-              <a href="./custommovie" class="footer-link">Editor's Pick</a>
+              <a href="./custommovie" class="footer-link">Custom</a>
             </li>
 
             <li>
