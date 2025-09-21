@@ -45,6 +45,8 @@ The application serves as a personal media archive for tracking movies and TV sh
 ```
 FrameX/
 ├── Admin/                 # Admin panel and management tools
+│   ├── database/
+│   │   ├── framex.sql   # Database schema
 │   ├── index.php         # Admin dashboard
 │   ├── movie.php         # Movie management
 │   ├── tv.php           # TV show management
@@ -74,7 +76,6 @@ FrameX/
 │   ├── search.php       # Search results
 │   ├── profile.php      # User profile
 │   └── ...              # Other public pages
-├── framex.sql           # Database schema
 └── README.md            # Project documentation
 ```
 
