@@ -34,7 +34,7 @@ $custom_tvshow = $stmt1->fetchAll();
 
   <!-- 
     - custom css link
-  -->
+    -->
   <link rel="stylesheet" href="../Assets/css/style.css">
 
   <!-- 

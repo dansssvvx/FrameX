@@ -107,18 +107,6 @@ include "../Conf/info.php";
                                 <p class="text-gray-400 text-sm mb-2">Project Lead & Backend Developer</p>
                                 <p class="text-xs text-gray-500">Informatics Engineering Student</p>
                             </div>
-                            <div class="text-center">
-                                <img src="../Assets/images/team-member-2.jpg" alt="Sucitasari Rahmadani" class="w-32 h-32 rounded-full mx-auto mb-4 object-cover border-4 border-citrine">
-                                <h4 class="text-lg font-semibold mb-1">Sucitasari Rahmadani</h4>
-                                <p class="text-gray-400 text-sm mb-2">Frontend Developer</p>
-                                <p class="text-xs text-gray-500">Informatics Engineering Student</p>
-                            </div>
-                            <div class="text-center">
-                                <img src="../Assets/images/team-member-3.jpg" alt="Rengganis Cahya Andini" class="w-32 h-32 rounded-full mx-auto mb-4 object-cover border-4 border-citrine">
-                                <h4 class="text-lg font-semibold mb-1">Rengganis Cahya Andini</h4>
-                                <p class="text-gray-400 text-sm mb-2">UI/UX Designer</p>
-                                <p class="text-xs text-gray-500">Informatics Engineering Student</p>
-                            </div>
                         </div>
                     </div>
 

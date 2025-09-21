@@ -40,7 +40,7 @@ include_once '../API/api_now.php';
 
 <body id="top">
 
-<?php include __DIR__ . './header.php'; ?>
+<?php include __DIR__ . '/header.php'; ?>
 
   <main>
     <article>
@@ -309,7 +309,7 @@ include_once '../API/api_now.php';
     - #FOOTER
   -->
 
-<?php include __DIR__ . './footer.php'; ?>
+<?php include __DIR__ . '/footer.php'; ?>
 
   <!-- 
     - #GO TO TOP
