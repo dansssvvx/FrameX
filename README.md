@@ -118,7 +118,7 @@ FrameX/
 
 5. **Access the Application**
    - Open your web browser
-   - Navigate to `http://localhost/framex/Public/`
+   - Navigate to `http://localhost/frameX/Public/`
    - The application should now be running
 
 ## 🛠️ Technologies Used
