@@ -1,5 +1,9 @@
 # 🎬 FrameX - Movie & TV Show Management Platform
 
+Developed by : 
+- **Ahmad Ramadhani R (F1D02310102)**
+- **Sucitasari Rahmadani (F1D02310138)**
+
 [![PHP](https://img.shields.io/badge/PHP-8.0+-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://php.net/)
 [![MySQL](https://img.shields.io/badge/MySQL-8.0+-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://www.mysql.com/)
 [![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
@@ -235,4 +239,4 @@ For support or questions regarding this project:
 
 ---
 
-**Developed with ❤️ by Informatics Engineering Students at Mataram University** 
+**Developed with ❤️ by Ramaa & Ucii ^_^** 
